@@ -1,0 +1,327 @@
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider      = "zod-prisma"
+  relationModel = true
+}
+
+model Admin {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  hash      String
+  sessionId String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+// Analytics
+
+model MetaUser {
+  id String @id @default(uuid())
+  ip String
+
+  yesToAnalytics   Boolean
+  yesToPrivateData Boolean
+  yesToAds         Boolean
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  newsletterUser NewsletterUser[]
+  user           User[]
+  events         Event[]
+  orders         Order[]
+  sessions       Session[]
+}
+
+model Session {
+  id         String      @id @default(uuid())
+  pageVisits PageVisit[]
+
+  createdAt DateTime? @default(now())
+
+  metaUserId String
+  metaUser   MetaUser @relation(fields: [metaUserId], references: [id])
+  Order      Order[]
+
+  @@index([metaUserId])
+}
+
+model PageVisit {
+  id String @id @default(uuid())
+
+  enteredAt   DateTime? @default(now())
+  enterTarget String
+  leftAt      DateTime
+  leftTarget  String
+
+  events Event[]
+
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId])
+}
+
+model Event {
+  id String @id @default(uuid())
+
+  name String
+
+  pageVisitId String
+  pageVisit   PageVisit @relation(fields: [pageVisitId], references: [id])
+
+  metaUserId String
+  metaUser   MetaUser @relation(fields: [metaUserId], references: [id])
+
+  @@index([pageVisitId])
+  @@index([metaUserId])
+}
+
+// Newsletter
+
+model Newsletter {
+  id       String  @id @default(uuid())
+  title    String  @db.Char(63)
+  text     String  @db.MediumText
+  htmlText String  @db.MediumText
+  sent     Boolean
+
+  createdAt DateTime?        @default(now())
+  sentAt    DateTime?        @updatedAt
+  users     NewsletterUser[]
+}
+
+model NewsletterUser {
+  id         String @id @default(uuid())
+  email      String
+  firstName  String
+  lastName   String
+  metaUserId String
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  users    Newsletter[]
+  metaUser MetaUser     @relation(fields: [metaUserId], references: [id])
+
+  @@index([metaUserId])
+}
+
+// Courses
+
+model User {
+  id                String    @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String    @unique
+  githubId          String    @unique
+  githubAccessToken String
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime? @updatedAt
+
+  courses  Course[]
+  chapters Chapter[]
+  lessons  Lesson[]
+  loggedIn UserLoginLog[]
+
+  metaUserId String
+  metaUser   MetaUser @relation(fields: [metaUserId], references: [id])
+
+  @@index([metaUserId])
+}
+
+model UserLoginLog {
+  id      String   @id @default(uuid())
+  loginAt DateTime
+  userId  String
+  user    User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Course {
+  id        String    @id @default(uuid())
+  title     String    @db.Char(63)
+  slug      String    @db.Char(63)
+  summary   String    @db.Char(255)
+  thumbnail String    @db.Char(255)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  users    User[]
+  chapters Chapter[]
+  lessons  Lesson[]
+}
+
+model Chapter {
+  id        String    @id @default(uuid())
+  title     String    @db.Char(63)
+  slug      String    @db.Char(63)
+  summary   String    @db.Char(255)
+  thumbnail String    @db.Char(255)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  users   User[]
+  lessons Lesson[]
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id              String    @id @default(uuid())
+  title           String    @db.Char(63)
+  slug            String    @db.Char(63)
+  summary         String    @db.Char(255)
+  thumbnail       String    @db.Char(255)
+  lessonBody      String    @db.MediumText
+  lessonExercises String    @db.MediumText
+  lessonSolutions String    @db.MediumText
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
+
+  users User[]
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id])
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id])
+
+  @@index([chapterId])
+  @@index([courseId])
+}
+
+// Shop
+
+model Product {
+  id           String  @id @default(uuid())
+  title        String  @db.Char(63)
+  slug         String  @db.Char(63)
+  description  String  @db.Char(255)
+  image        String  @db.Char(255)
+  defaultPrice Int
+  metaProduct  Boolean
+  active       Boolean
+  digital      Boolean
+  body         String  @db.MediumText
+  stock        Int
+
+  checkoutProduct CheckoutProduct[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model CheckoutProduct {
+  id        String @id @default(uuid())
+  productId String
+
+  currentPrice Int
+  quantity     Int
+
+  orders  Order[]
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+}
+
+model Order {
+  id            String  @id @default(uuid())
+  email         String  @db.Char(63)
+  address       String  @db.Char(255)
+  phone         String  @db.Char(63)
+  termsAccepted Boolean
+
+  paymentReceived Boolean
+
+  trackingLink  String @db.Char(255)
+  referenceLink String @db.Char(255)
+
+  confirmationEmailSent Boolean
+  orderCompleted        Boolean
+  orderCanceled         Boolean
+
+  amountTotal Int
+
+  products CheckoutProduct[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  sessionId String
+  session   Session @relation(fields: [sessionId], references: [id])
+
+  metaUserId String
+  metaUser   MetaUser @relation(fields: [metaUserId], references: [id])
+
+  @@index([sessionId])
+  @@index([metaUserId])
+}
+
+// Blog
+
+model ArticleCategories {
+  name String @id
+
+  articles Article[]
+}
+
+model Article {
+  id          String  @id @default(uuid())
+  title       String  @db.Char(63)
+  slug        String  @db.Char(63)
+  description String  @db.Char(255)
+  image       String  @db.Char(255)
+  active      Boolean
+  body        String  @db.MediumText
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  categoryId String
+  category   ArticleCategories @relation(fields: [categoryId], references: [name])
+
+  @@index([categoryId])
+}
+
+// Projects
+
+model ProjectType {
+  name String @id
+
+  projects Project[]
+}
+
+model Project {
+  id          String  @id @default(uuid())
+  title       String  @db.Char(63)
+  slug        String  @db.Char(63)
+  description String  @db.Char(255)
+  image       String  @db.Char(255)
+  active      Boolean
+  scope       String  @db.MediumText
+  strategy    String  @db.MediumText
+  execution   String  @db.MediumText
+  results     String  @db.MediumText
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  projectId String
+  project   ProjectType @relation(fields: [projectId], references: [name])
+
+  @@index([projectId])
+}
