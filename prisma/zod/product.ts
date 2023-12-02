@@ -11,6 +11,8 @@ export const ProductModel = z.object({
   metaProduct: z.boolean(),
   active: z.boolean(),
   digital: z.boolean(),
+  sizeVariant: z.string().nullish(),
+  colorVariant: z.string().nullish(),
   body: z.string(),
   stock: z.number().int(),
   createdAt: z.date().nullish(),

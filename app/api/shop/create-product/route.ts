@@ -19,6 +19,9 @@ export async function POST(request: Request) {
     }
 
     try {
+        const { id, createdAt, updatedAt, ...product } = data;
+        await db.product.create({ data: product });
+
         return buildResponse({ message: successMessages.createdSuccessfully }, 200);
     } catch (error) {
         return buildResponse({ message: errorMessages.creationFailed }, 500);

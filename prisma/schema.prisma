@@ -206,6 +206,8 @@ model Product {
   metaProduct  Boolean
   active       Boolean
   digital      Boolean
+  sizeVariant  String?
+  colorVariant String?
   body         String  @db.MediumText
   stock        Int
 
