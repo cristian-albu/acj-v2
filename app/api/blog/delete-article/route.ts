@@ -4,7 +4,7 @@ import db from "@/shared/lib/prismaClient";
 import validateReqToken from "@/shared/lib/validateReqToken";
 
 export async function POST(request: Request) {
-    const { data, authToken } = (await request.json()) as ArticleDeleteRequestPayload;
+    const { data, authToken } = (await request.json()) as DeleteRequestPayload;
 
     // Validate the auth token of the sender
     if (!validateReqToken(authToken)) {

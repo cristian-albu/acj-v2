@@ -131,21 +131,11 @@ model User {
   courses  Course[]
   chapters Chapter[]
   lessons  Lesson[]
-  loggedIn UserLoginLog[]
 
   metaUserId String
   metaUser   MetaUser @relation(fields: [metaUserId], references: [id])
 
   @@index([metaUserId])
-}
-
-model UserLoginLog {
-  id      String   @id @default(uuid())
-  loginAt DateTime
-  userId  String
-  user    User     @relation(fields: [userId], references: [id])
-
-  @@index([userId])
 }
 
 model Course {
@@ -212,30 +202,17 @@ model Product {
   slug         String  @db.Char(63)
   description  String  @db.Char(255)
   image        String  @db.Char(255)
-  defaultPrice Int
+  defaultPrice Float
   metaProduct  Boolean
   active       Boolean
   digital      Boolean
   body         String  @db.MediumText
   stock        Int
 
-  checkoutProduct CheckoutProduct[]
-
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-}
 
-model CheckoutProduct {
-  id        String @id @default(uuid())
-  productId String
-
-  currentPrice Int
-  quantity     Int
-
-  orders  Order[]
-  product Product @relation(fields: [productId], references: [id])
-
-  @@index([productId])
+  orders ProductOrder[]
 }
 
 model Order {
@@ -254,9 +231,7 @@ model Order {
   orderCompleted        Boolean
   orderCanceled         Boolean
 
-  amountTotal Int
-
-  products CheckoutProduct[]
+  amountTotal Float
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -267,8 +242,27 @@ model Order {
   metaUserId String
   metaUser   MetaUser @relation(fields: [metaUserId], references: [id])
 
+  // Define the relationship between Order and Product
+  products ProductOrder[]
+
   @@index([sessionId])
   @@index([metaUserId])
+}
+
+model ProductOrder {
+  id           String @id @default(uuid())
+  quantity     Int
+  currentPrice Float
+
+  // Define the relationship to Order and Product
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@index([orderId])
+  @@index([productId])
 }
 
 // Blog

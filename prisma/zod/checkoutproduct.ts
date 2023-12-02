@@ -3,9 +3,9 @@ import { CompleteOrder, RelatedOrderModel, CompleteProduct, RelatedProductModel 
 
 export const CheckoutProductModel = z.object({
   id: z.string(),
-  productId: z.string(),
   currentPrice: z.number().int(),
   quantity: z.number().int(),
+  productId: z.string(),
 })
 
 export interface CompleteCheckoutProduct extends z.infer<typeof CheckoutProductModel> {
