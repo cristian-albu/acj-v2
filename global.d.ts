@@ -103,4 +103,8 @@ declare global {
     export type DeleteRequestPayload = {
         data: { id: string };
     } & RequestPayload;
+
+    export type TChildren = {
+        children: React.ReactNode;
+    };
 }

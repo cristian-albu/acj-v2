@@ -41,7 +41,7 @@ export const mock_productOrder: ProductOrder[] = mock_products.map((product: Pro
     id: `product-order-id-${index}`,
     quantity: index + 1,
     currentPrice: 15 * (index + 1),
-    orderId: "order-id-1",
+    orderId: "",
     productId: product.id,
 }));
 

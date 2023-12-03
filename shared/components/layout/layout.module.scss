@@ -1,0 +1,55 @@
+@use "/app/_variables.scss" as v;
+
+.section {
+    & .fullscreen {
+    }
+}
+
+.wrapper {
+}
+
+.row {
+}
+
+.card {
+    & .full {
+    }
+
+    & .half {
+    }
+
+    & .third {
+    }
+
+    & .quarter {
+    }
+
+    & .tight {
+    }
+
+    & .hoverable {
+    }
+}
+
+.button {
+    & .text {
+    }
+
+    & .linkText {
+    }
+
+    & .linkButton {
+    }
+
+    & .primary {
+    }
+
+    & .secondary {
+    }
+
+    & .light {
+    }
+
+    & .dark {
+    }
+}
