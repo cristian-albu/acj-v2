@@ -1,7 +1,6 @@
 "use client";
 import Switch from "@/shared/components/inputs/Switch";
 import TextInput from "@/shared/components/inputs/TextInput";
-import TextareaInput from "@/shared/components/inputs/TextareaInput";
 import Button from "@/shared/components/layout/Button";
 import ButtonLink from "@/shared/components/layout/ButtonLink";
 import Card from "@/shared/components/layout/Card";
@@ -16,14 +15,12 @@ const StylesheetView = () => {
             <Wrapper width="small">
                 <Row>
                     <Card>
-                        <ButtonLink isExternal={false} href={"/"}>
-                            Link text
-                        </ButtonLink>
+                        <ButtonLink href={"/"}>Link text</ButtonLink>
                         <Button>Button text</Button>
                     </Card>
                 </Row>
-                <TextInput>This is the description</TextInput>
-                <TextareaInput>This is a textarea</TextareaInput>
+                <TextInput errorCallbacks={[{ validation: "email" }]}>This is the description</TextInput>
+                <TextInput type="textarea">This is the textarea</TextInput>
                 <Switch>This is a switch</Switch>
             </Wrapper>
         </Section>

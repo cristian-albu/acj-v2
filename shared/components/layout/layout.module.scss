@@ -55,24 +55,33 @@
 }
 
 .button {
+    background-color: black;
+    color: white;
     & .text {
+        color: gray;
     }
 
     & .linkText {
+        color: gray;
     }
 
     & .linkButton {
+        color: gray;
     }
 
     & .primary {
+        color: gray;
     }
 
     & .secondary {
+        color: gray;
     }
 
     & .light {
+        color: gray;
     }
 
     & .dark {
+        color: gray;
     }
 }

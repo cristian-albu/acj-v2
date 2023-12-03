@@ -21,18 +21,14 @@ type TGenericButton = {
 export type TButton = ButtonHTMLAttributes<HTMLButtonElement> & TChildren & TGenericButton;
 
 type TGenericLinkButton = {
+    href: string;
     linkStyle?: "linkText" | "linkButton";
 };
-type TInternalButtonLink = { isExternal: false } & TGenericLinkButton & LinkProps & TChildren & TGenericButton;
+type TInternalButtonLink = TGenericLinkButton & LinkProps & TChildren & TGenericButton;
 
-type TExternalButtonLink = { isExternal: true } & TGenericLinkButton &
-    AnchorHTMLAttributes<HTMLAnchorElement> &
-    TChildren &
-    TGenericButton;
+type TExternalButtonLink = TGenericLinkButton & AnchorHTMLAttributes<HTMLAnchorElement> & TChildren & TGenericButton;
 
-export type TButtonLink = {
-    isExternal?: boolean;
-} & (TInternalButtonLink | TExternalButtonLink);
+export type TButtonLink = TInternalButtonLink | TExternalButtonLink;
 
 export type TCard = {
     isHoverable?: boolean;

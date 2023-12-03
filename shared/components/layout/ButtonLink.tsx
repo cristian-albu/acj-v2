@@ -4,37 +4,24 @@ import { TButtonLink } from "./types";
 import Link from "next/link";
 
 const ButtonLink: React.FC<TButtonLink> = (props) => {
-    const { isExternal, type, theme, linkStyle } = props;
+    const { href, type, theme, linkStyle, children, ...rest } = props;
 
-    const linkStyleClass = `
-    ${styles.button} 
-    ${linkStyle && styles[linkStyle]} 
-    ${type && styles[type]} 
-    ${theme && styles[theme]} 
-    `;
+    const styleList = [styles.button];
 
-    if (isExternal) {
-        const { href, children, ...elementsProps } = props;
+    linkStyle && styleList.push(styles[linkStyle]);
+    type && styleList.push(styles[type]);
+    theme && styleList.push(styles[theme]);
+    const linkStyleClass = styleList.join(" ");
 
+    if (href[0] != "/") {
         return (
-            <a href={href} className={linkStyleClass} {...elementsProps}>
+            <a href={href} className={linkStyleClass} {...rest}>
                 {children}
             </a>
         );
     } else {
-        const { type, theme, as, href, replace, scroll, shallow, passHref, children, ...elementsProps } = props;
-
         return (
-            <Link
-                as={as}
-                href={href}
-                passHref={passHref}
-                replace={replace}
-                scroll={scroll}
-                shallow={shallow}
-                className={linkStyleClass}
-                {...elementsProps}
-            >
+            <Link href={href} className={linkStyleClass} {...rest}>
                 {children}
             </Link>
         );

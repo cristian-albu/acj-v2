@@ -5,7 +5,7 @@ import { TvalidationReturn, validateEmail, validateMinMaxLength } from "@/shared
 
 const InputError: React.FC<TInputErrorProps> = ({ value, errors }) => {
     const errorList = errors.map((error: TInputError) => {
-        switch (error.val) {
+        switch (error.validation) {
             case "email":
                 return validateEmail(value, error.args);
             case "minmax":
@@ -18,7 +18,7 @@ const InputError: React.FC<TInputErrorProps> = ({ value, errors }) => {
     return (
         <div>
             {errorList.map((err: TvalidationReturn) => (
-                <div>{err.error}</div>
+                <div key={err.error}>{err.error}</div>
             ))}
         </div>
     );

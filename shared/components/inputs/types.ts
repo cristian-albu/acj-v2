@@ -1,29 +1,47 @@
-import { ChangeEvent, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { ChangeEvent, FocusEvent, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 export type TSwitch = TChildren & InputHTMLAttributes<HTMLInputElement>;
 
-type TGenericInput = {
-    errorCallbacks?: TInputError[];
-    onChange?: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => any;
+export type TEventItem = HTMLInputElement | HTMLTextAreaElement;
+export type TInputEvents = {
+    onChange?: (event: ChangeEvent<TEventItem>) => any;
+    onBlur?: (event: FocusEvent<TEventItem>) => any;
+    onFocus?: (event: FocusEvent<TEventItem>) => any;
 };
+
+type TGenericInput = {
+    /**
+ * @example
+    type TInputErrorBasic = {
+        val: "email" | "slug";
+        args?: string;
+    };
+
+    type TInputErrorMinMax = {
+        val: "minmax";
+        args: [number, number, string?, string?];
+    };
+ */
+    errorCallbacks?: TInputError[];
+} & TInputEvents &
+    TChildren;
 
 export type TTextInput = {
     type?: "text" | "number";
-} & TChildren &
-    TGenericInput &
-    InputHTMLAttributes<HTMLInputElement>;
+} & InputHTMLAttributes<HTMLInputElement> &
+    TGenericInput;
 
-export type TTextareaInput = TGenericInput & TChildren & TextareaHTMLAttributes<HTMLTextAreaElement>;
+export type TTextareaInput = { type: "textarea" } & TextareaHTMLAttributes<HTMLTextAreaElement> & TGenericInput;
 
 // Validation error types
 
 export type TInputErrorBasic = {
-    val: "email" | "slug";
+    validation: "email" | "slug";
     args?: string;
 };
 
 export type TInputErrorMinMax = {
-    val: "minmax";
+    validation: "minmax";
     args: [number, number, string?, string?];
 };
 
