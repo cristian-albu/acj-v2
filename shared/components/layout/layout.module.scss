@@ -1,14 +1,37 @@
 @use "/app/_variables.scss" as v;
 
 .section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
     & .fullscreen {
+        min-height: 100vh;
     }
 }
 
 .wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: v.$maxWidthBig;
+
+    &.big {
+        max-width: v.$maxWidthBig;
+    }
+
+    &.small {
+        max-width: v.$maxWidthSmall;
+    }
 }
 
 .row {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .card {
