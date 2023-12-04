@@ -19,7 +19,9 @@ const StylesheetView = () => {
                         <Button>Button text</Button>
                     </Card>
                 </Row>
-                <TextInput errorCallbacks={[{ validation: "email" }]}>This is the description</TextInput>
+                <TextInput errorCallbacks={[{ validation: "email" }, { validation: "minmax", args: [1, 10] }]}>
+                    This is the description
+                </TextInput>
                 <TextInput type="textarea">This is the textarea</TextInput>
                 <Switch>This is a switch</Switch>
             </Wrapper>

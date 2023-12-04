@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { ChangeEvent, FocusEvent, HTMLAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 export type TSwitch = TChildren & InputHTMLAttributes<HTMLInputElement>;
 
@@ -47,7 +47,19 @@ export type TInputErrorMinMax = {
 
 export type TInputError = TInputErrorBasic | TInputErrorMinMax;
 
-export type TInputErrorProps = {
+export type TErrorState = {
+    focusedOnce: boolean;
+    isFocused: boolean;
+    shouldShowErr: boolean;
+    shouldHighlightErr: boolean;
+};
+
+export type TErrorProps = {
     value: string;
     errors: TInputError[];
 };
+
+export type TInputErrorProps = {
+    errorState: TErrorState;
+} & TErrorProps &
+    HTMLAttributes<HTMLDivElement>;
