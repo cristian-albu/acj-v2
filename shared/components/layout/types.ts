@@ -14,11 +14,12 @@ export type TWrapper = {
 export type TRow = {} & HTMLAttributes<HTMLDivElement> & TChildren;
 
 type TGenericButton = {
-    type?: "primary" | "secondary";
+    btnType?: "primary" | "secondary";
+    btnStyle?: "outline";
     theme?: "light" | "dark";
 };
 
-export type TButton = ButtonHTMLAttributes<HTMLButtonElement> & TChildren & TGenericButton;
+export type TButton = TGenericButton & ButtonHTMLAttributes<HTMLButtonElement> & TChildren;
 
 type TGenericLinkButton = {
     href: string;

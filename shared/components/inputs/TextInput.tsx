@@ -4,16 +4,15 @@ import { TErrorState, TInputEvents, TTextInput, TTextareaInput } from "./types";
 import styles from "./inputs.module.scss";
 import InputError from "./utils/InputError";
 
-const TextInput: React.FC<TTextInput | TTextareaInput> = (props) => {
-    const {
-        type,
-        errorCallbacks,
-        onChange: changeCallback,
-        onFocus: focusCallback,
-        onBlur: blurCallback,
-        children,
-        ...elementProps
-    } = props;
+const TextInput: React.FC<TTextInput | TTextareaInput> = ({
+    type,
+    errorCallbacks,
+    onChange: changeCallback,
+    onFocus: focusCallback,
+    onBlur: blurCallback,
+    children,
+    ...elementProps
+}) => {
     const [value, setValue] = useState("");
     const [errorState, setShowErr] = useState<TErrorState>({
         focusedOnce: false,

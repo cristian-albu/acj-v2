@@ -9,7 +9,7 @@ const Card: React.FC<TCard> = ({ isHoverable, width, tightPadding, children, ...
     width && cardStyleList.push(styles[width]);
     tightPadding && cardStyleList.push(styles["tight"]);
 
-    const cardStyle = cardStyleList.join("");
+    const cardStyle = cardStyleList.join(" ");
     return (
         <div className={cardStyle} {...elementProps}>
             {children}

@@ -15,9 +15,64 @@ const StylesheetView = () => {
             <Wrapper width="small">
                 <Row>
                     <Card>
-                        <ButtonLink href={"/"}>Link text</ButtonLink>
-                        <Button>Button text</Button>
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
                     </Card>
+
+                    <Card width="half">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                    <Card width="half">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+
+                    <Card width="third">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                    <Card width="third">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                    <Card width="third">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+
+                    <Card width="quarter">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                    <Card width="quarter">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                    <Card width="quarter">
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                    <Card width="quarter" isHoverable={true}>
+                        <h3>Text</h3>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </Card>
+                </Row>
+                <Row>
+                    <ButtonLink href={"/"} linkStyle="linkText">
+                        Link text
+                    </ButtonLink>
+                    <ButtonLink href={"/"}>Link text</ButtonLink>
+                    <Button>Button text</Button>
+                    <Button btnStyle="outline">Button text</Button>
+                    <Button btnType="primary">Button text</Button>
+                    <Button btnType="secondary">Button text</Button>
+                    <Button btnType="primary" btnStyle="outline">
+                        Button text
+                    </Button>
+                    <Button btnType="secondary" btnStyle="outline">
+                        Button text
+                    </Button>
                 </Row>
                 <TextInput errorCallbacks={[{ validation: "email" }, { validation: "minmax", args: [1, 10] }]}>
                     This is the description

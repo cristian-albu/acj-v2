@@ -4,12 +4,12 @@ import { TButtonLink } from "./types";
 import Link from "next/link";
 
 const ButtonLink: React.FC<TButtonLink> = (props) => {
-    const { href, type, theme, linkStyle, children, ...rest } = props;
+    const { href, btnStyle, theme, linkStyle, children, ...rest } = props;
 
     const styleList = [styles.button];
 
     linkStyle && styleList.push(styles[linkStyle]);
-    type && styleList.push(styles[type]);
+    btnStyle && styleList.push(styles[btnStyle]);
     theme && styleList.push(styles[theme]);
     const linkStyleClass = styleList.join(" ");
 

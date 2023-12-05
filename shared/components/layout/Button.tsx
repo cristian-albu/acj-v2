@@ -2,14 +2,15 @@ import React from "react";
 import styles from "./layout.module.scss";
 import { TButton } from "./types";
 
-const Button: React.FC<TButton> = ({ type, theme, children, ...elementsProps }) => {
+const Button: React.FC<TButton> = ({ btnType, btnStyle, theme, children, ...elementsProps }) => {
     const btnStyleList = [styles.button];
-    type && btnStyleList.push(styles[type]);
+    btnType && btnStyleList.push(styles[btnType]);
     theme && btnStyleList.push(styles[theme]);
-    const btnStyle = btnStyleList.join(" ");
+    btnStyle && btnStyleList.push(styles[btnStyle]);
+    const buttonClassName = btnStyleList.join(" ");
 
     return (
-        <button className={btnStyle} {...elementsProps}>
+        <button className={buttonClassName} {...elementsProps}>
             {children}
         </button>
     );
