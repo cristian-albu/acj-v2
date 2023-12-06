@@ -64,3 +64,17 @@ export const validateMinMaxLength = (
 
     return output;
 };
+
+export const validateFile = (hasErr: "clientErr" | "serverErr" | string, customError?: string): TvalidationReturn => {
+    let output: TvalidationReturn = { isValid: true, error: "" };
+
+    if (hasErr === "clientErr") {
+        output = { isValid: false, error: customError || "Can't upload this file." };
+    }
+
+    if (hasErr === "serverErr") {
+        output = { isValid: false, error: customError || "An error has occurred while uploading the file" };
+    }
+
+    return output;
+};

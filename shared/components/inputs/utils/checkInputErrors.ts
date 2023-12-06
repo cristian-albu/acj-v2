@@ -1,4 +1,9 @@
-import { validateEmail, validateMinMaxLength, validateSlug } from "@/shared/lib/input-validation/inputValidation";
+import {
+    validateEmail,
+    validateFile,
+    validateMinMaxLength,
+    validateSlug,
+} from "@/shared/lib/input-validation/inputValidation";
 import { TErrorProps, TInputError } from "../types";
 
 export default function checkInputErrors({ value, errors }: TErrorProps) {
@@ -11,7 +16,7 @@ export default function checkInputErrors({ value, errors }: TErrorProps) {
             case "slug":
                 return validateSlug(value, error.args);
             case "file":
-                return { isValid: true, error: "" };
+                return validateFile(value, error.args);
         }
     });
 

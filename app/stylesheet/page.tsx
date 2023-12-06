@@ -1,4 +1,4 @@
-import StylesheetView from "@/Views/stylesheet/StylesheetView";
+import StylesheetView from "@/views/stylesheet/StylesheetView";
 import React from "react";
 
 const StylesheetPage = () => {

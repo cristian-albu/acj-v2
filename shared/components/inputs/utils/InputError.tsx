@@ -7,6 +7,8 @@ import styles from "../inputs.module.scss";
 
 const InputError: React.FC<TInputErrorProps> = ({ value, errors, errorState, ...rest }) => {
     const errorList = checkInputErrors({ value, errors });
+
+    console.log(errorList);
     return (
         <div className={styles.textInputErrors}>
             {errorList.length && errorState.shouldHighlightErr && (

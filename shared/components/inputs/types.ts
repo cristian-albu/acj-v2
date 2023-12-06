@@ -59,14 +59,15 @@ export type TInpuErrorFiel = {
 export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInpuErrorFiel;
 
 export type TErrorState = {
-    focusedOnce: boolean;
-    isFocused: boolean;
+    focusedOnce?: boolean;
+    isFocused?: boolean;
     shouldShowErr: boolean;
     shouldHighlightErr: boolean;
 };
 
+type TFileError = "clientErr" | "serverErr";
 export type TErrorProps = {
-    value: string;
+    value: string | TFileError;
     errors: TInputError[];
 };
 

@@ -85,7 +85,8 @@ const StylesheetView = () => {
                 </TextInput>
                 <TextInput type="textarea">This is the textarea</TextInput>
                 <Switch>This is a switch</Switch>
-                <FileInput />
+                <FileInput errorCallbacks={[{ validation: "file" }]} />
+                <FileInput errorCallbacks={[{ validation: "file" }]} />
             </Wrapper>
         </Section>
     );
