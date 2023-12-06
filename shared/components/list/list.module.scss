@@ -1,0 +1,23 @@
+@use "/app/_variables.scss" as v;
+
+.list {
+    list-style: none;
+    list-style-type: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &:focus {
+        outline: 1px solid v.$gray;
+    }
+
+    .listItem {
+        width: 100%;
+        position: relative;
+
+        &:focus {
+            z-index: 99;
+            outline: 1px solid v.$gray;
+        }
+    }
+}

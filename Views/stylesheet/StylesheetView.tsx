@@ -1,4 +1,5 @@
 "use client";
+import { mock_listItems } from "@/data/list/mock_data";
 import Switch from "@/shared/components/inputs/Switch";
 import TextInput from "@/shared/components/inputs/TextInput";
 import Button from "@/shared/components/layout/Button";
@@ -7,12 +8,16 @@ import Card from "@/shared/components/layout/Card";
 import Row from "@/shared/components/layout/Row";
 import Section from "@/shared/components/layout/Section";
 import Wrapper from "@/shared/components/layout/Wrapper";
+import List from "@/shared/components/list/List";
 import React from "react";
 
 const StylesheetView = () => {
     return (
         <Section>
             <Wrapper width="small">
+                <Row>
+                    <List listItems={mock_listItems} />
+                </Row>
                 <Row>
                     <Card>
                         <h3>Text</h3>
