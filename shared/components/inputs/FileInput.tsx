@@ -33,7 +33,6 @@ const FileInput: React.FC<TFileInput> = ({ errorCallbacks }) => {
         setFileErr("");
         if (event.target.files && event.target.files[0]) {
             const newFile = event.target.files[0];
-            console.log(newFile);
             setFile(newFile);
             if (newFile.type.startsWith("image/")) {
                 setImageObjectUrl(URL.createObjectURL(newFile));
@@ -76,6 +75,7 @@ const FileInput: React.FC<TFileInput> = ({ errorCallbacks }) => {
     const clearFile = (event?: MouseEvent<HTMLButtonElement>) => {
         event && event.preventDefault();
         setFileErr("");
+        setErrorState({ ...errorState, shouldShowErr: false, shouldHighlightErr: false });
         if (generateImageObjectUrl) {
             URL.revokeObjectURL(generateImageObjectUrl);
             setImageObjectUrl(null);

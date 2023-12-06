@@ -165,11 +165,16 @@
 .fileUpload {
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     padding: 2rem 0rem;
     flex-wrap: wrap;
     position: relative;
+    background-color: white;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    padding: 2rem;
 
     & .fileContainer {
         max-width: 40%;
@@ -215,7 +220,7 @@
         gap: v.$gap;
         justify-content: stretch;
         align-items: stretch;
-        padding: 2rem;
+        padding-left: 2rem;
     }
 
     & .fileLabel {
