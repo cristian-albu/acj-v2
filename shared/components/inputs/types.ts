@@ -23,15 +23,21 @@ type TGenericInput = {
     };
  */
     errorCallbacks?: TInputError[];
-} & TInputEvents &
-    TChildren;
+};
+
+export type TFileInput = {} & TGenericInput;
 
 export type TTextInput = {
     type?: "text" | "number";
 } & InputHTMLAttributes<HTMLInputElement> &
-    TGenericInput;
+    TGenericInput &
+    TChildren &
+    TInputEvents;
 
-export type TTextareaInput = { type: "textarea" } & TextareaHTMLAttributes<HTMLTextAreaElement> & TGenericInput;
+export type TTextareaInput = { type: "textarea" } & TextareaHTMLAttributes<HTMLTextAreaElement> &
+    TGenericInput &
+    TChildren &
+    TInputEvents;
 
 // Validation error types
 
@@ -45,7 +51,12 @@ export type TInputErrorMinMax = {
     args: [number, number, string?, string?];
 };
 
-export type TInputError = TInputErrorBasic | TInputErrorMinMax;
+export type TInpuErrorFiel = {
+    validation: "file";
+    args?: string;
+};
+
+export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInpuErrorFiel;
 
 export type TErrorState = {
     focusedOnce: boolean;

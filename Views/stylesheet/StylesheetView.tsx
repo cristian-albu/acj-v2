@@ -1,5 +1,6 @@
 "use client";
 import { mock_listItems } from "@/data/list/mock_data";
+import FileInput from "@/shared/components/inputs/FileInput";
 import Switch from "@/shared/components/inputs/Switch";
 import TextInput from "@/shared/components/inputs/TextInput";
 import Button from "@/shared/components/layout/Button";
@@ -84,6 +85,7 @@ const StylesheetView = () => {
                 </TextInput>
                 <TextInput type="textarea">This is the textarea</TextInput>
                 <Switch>This is a switch</Switch>
+                <FileInput />
             </Wrapper>
         </Section>
     );

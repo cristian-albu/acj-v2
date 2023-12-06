@@ -10,6 +10,8 @@ export default function checkInputErrors({ value, errors }: TErrorProps) {
                 return validateMinMaxLength(value, ...error.args);
             case "slug":
                 return validateSlug(value, error.args);
+            case "file":
+                return { isValid: true, error: "" };
         }
     });
 

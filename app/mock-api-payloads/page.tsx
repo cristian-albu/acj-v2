@@ -15,6 +15,10 @@ const createProduct = async (data: Product) => {
     const res = await fetch("/api/shop/create-product", {
         method: "POST",
         body: JSON.stringify(payload),
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
     });
     const resJson = await res.json();
 
@@ -31,6 +35,10 @@ const createOrder = async (orderData: Order, productsData: ProductOrder[]) => {
     const res = await fetch("/api/shop/create-order", {
         method: "POST",
         body: JSON.stringify(payload),
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+        },
     });
     const resJson = await res.json();
 
