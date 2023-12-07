@@ -1,6 +1,6 @@
-import { ChangeEvent, FocusEvent, HTMLAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import React, { ChangeEvent, FocusEvent, HTMLAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
-export type TSwitch = TChildren & InputHTMLAttributes<HTMLInputElement>;
+export type TSwitch = { id?: string } & TChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export type TEventItem = HTMLInputElement | HTMLTextAreaElement;
 export type TInputEvents = {
@@ -22,10 +22,11 @@ type TGenericInput = {
         args: [number, number, string?, string?];
     };
  */
+    id?: string;
     errorCallbacks?: TInputError[];
 };
 
-export type TFileInput = {} & TGenericInput;
+export type TFileInput = { id?: string; children?: React.ReactNode } & TGenericInput;
 
 export type TTextInput = {
     type?: "text" | "number";
@@ -51,12 +52,12 @@ export type TInputErrorMinMax = {
     args: [number, number, string?, string?];
 };
 
-export type TInpuErrorFiel = {
+export type TInputErrorFile = {
     validation: "file";
     args?: string;
 };
 
-export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInpuErrorFiel;
+export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInputErrorFile;
 
 export type TErrorState = {
     focusedOnce?: boolean;
@@ -75,3 +76,29 @@ export type TInputErrorProps = {
     errorState: TErrorState;
 } & TErrorProps &
     HTMLAttributes<HTMLDivElement>;
+
+// Form
+
+export type TDynamicFormInputText = {
+    type: "text" | "textarea" | "number";
+} & (TTextInput | TTextareaInput);
+
+export type TDynamicFormInputSwitch = {
+    type: "switch";
+} & TSwitch;
+
+export type TDynamicFormInputFile = {
+    type: "file";
+} & TFileInput;
+
+export type TDynamicFormInput = {
+    id: string;
+} & (TDynamicFormInputText | TDynamicFormInputFile | TDynamicFormInputSwitch);
+
+export type TDynamicFormProps = {
+    inputList: TDynamicFormInput[];
+    formButton: {
+        text: string;
+        action: (data: any) => void;
+    };
+};

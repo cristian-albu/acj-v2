@@ -1,8 +1,8 @@
 "use client";
-import React, { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, MouseEvent, useRef, useState } from "react";
 import styles from "./inputs.module.scss";
 import InputError from "./utils/InputError";
-import { TErrorState, TFileInput, TInputEvents } from "./types";
+import { TErrorState, TFileInput } from "./types";
 import Button from "../layout/Button";
 import Image from "next/image";
 import Loading from "../layout/Loading";
@@ -14,7 +14,7 @@ import Loading from "../layout/Loading";
  *
  * event.target.attributes.getNamesItem('server-file-ref').value
  */
-const FileInput: React.FC<TFileInput> = ({ errorCallbacks }) => {
+const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
     const ref = useRef<null | HTMLInputElement>(null);
     const [file, setFile] = useState<null | File>(null);
     const [generateImageObjectUrl, setImageObjectUrl] = useState<null | string>(null);
@@ -137,6 +137,7 @@ const FileInput: React.FC<TFileInput> = ({ errorCallbacks }) => {
             ) : (
                 <label className={styles.fileLabel}>
                     <input
+                        id={id}
                         className={styles.fileInput}
                         type="file"
                         name="fileUpload"
@@ -145,7 +146,7 @@ const FileInput: React.FC<TFileInput> = ({ errorCallbacks }) => {
                         ref={ref}
                         disabled={loading}
                     />
-                    <span>📂 Upload file</span>
+                    <span>📂 {children || "Upload file"}</span>
                 </label>
             )}
 

@@ -5,6 +5,7 @@ import styles from "./inputs.module.scss";
 import InputError from "./utils/InputError";
 
 const TextInput: React.FC<TTextInput | TTextareaInput> = ({
+    id,
     type,
     errorCallbacks,
     onChange: changeCallback,
@@ -59,12 +60,14 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
             <span className={styles.textInputDesc}>{children}</span>
             {type === "textarea" ? (
                 <textarea
+                    id={id}
                     className={`${styles.textInput} ${styles.textarea}`}
                     {...eventHandlers}
                     {...(elementProps as TextareaHTMLAttributes<HTMLTextAreaElement>)} // reson to hate typescript no. 1
                 />
             ) : (
                 <input
+                    id={id}
                     className={styles.textInput}
                     type={type || "text"}
                     {...eventHandlers}
