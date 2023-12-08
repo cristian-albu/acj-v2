@@ -8,7 +8,7 @@ import {
 } from "@/shared/lib/input-validation/inputValidation";
 import { TErrorProps, TFileError, TInputError } from "../types";
 
-export default function checkInputErrors({ value, errors }: TErrorProps) {
+export default function checkInputErrors({ value, errors }: { value: string | number; errors: TInputError[] }) {
     const errorList = errors.map((error: TInputError) => {
         switch (error.validation) {
             case "email":
@@ -17,14 +17,12 @@ export default function checkInputErrors({ value, errors }: TErrorProps) {
                 return validateMinMaxLength(value as string, ...error.args);
             case "slug":
                 return validateSlug(value as string, error.args);
-            case "file":
-                return validateFile(value as string | TFileError, error.args);
-            case "fileSize":
-                return validateFileSize(value as number, ...error.args);
-            case "fileType":
-                return validateFileType(value as string, ...error.args);
+            default:
+                return { isValid: true, error: "" };
         }
     });
 
     return errorList;
 }
+
+export function checkFileErrors(value: string) {}

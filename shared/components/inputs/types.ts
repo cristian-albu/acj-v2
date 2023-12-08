@@ -79,13 +79,20 @@ export type TErrorState = {
 export type TFileError = "clientErr" | "serverErr";
 
 export type TErrorProps = {
-    value: string | number | TFileError;
+    value: string | number;
+    errors: TInputError[];
+    errType: "text";
+};
+
+export type TErrorFileProps = {
+    value: { [key: string]: string | number | TFileError };
+    errType: "file";
     errors: TInputError[];
 };
 
 export type TInputErrorProps = {
     errorState: TErrorState;
-} & TErrorProps &
+} & (TErrorProps | TErrorFileProps) &
     HTMLAttributes<HTMLDivElement>;
 
 // Form

@@ -76,7 +76,13 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
             )}
 
             {errorCallbacks && (
-                <InputError value={value} errors={errorCallbacks} errorState={errorState} {...inputErrorEventsHandlers} />
+                <InputError
+                    errType="text"
+                    value={value}
+                    errors={errorCallbacks}
+                    errorState={errorState}
+                    {...inputErrorEventsHandlers}
+                />
             )}
         </label>
     );

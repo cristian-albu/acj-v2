@@ -2,7 +2,7 @@
 import React, { ChangeEvent, MouseEvent, useRef, useState } from "react";
 import styles from "./inputs.module.scss";
 import InputError from "./utils/InputError";
-import { TErrorState, TFileInput } from "./types";
+import { TErrorState, TFileInput, TInputError } from "./types";
 import Button from "../layout/Button";
 import Loading from "../layout/Loading";
 
@@ -16,6 +16,18 @@ import Loading from "../layout/Loading";
  * const data = event.target.attributes.getNamesItem('server-file-ref').value
  */
 const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
+    const errValueToBeCheckedObj =
+        errorCallbacks &&
+        errorCallbacks.reduce((acc: { [key: string]: string | number }, curr: TInputError) => {
+            if (curr.validation === "fileSize") {
+                acc[curr.validation] = 0;
+            } else {
+                acc[curr.validation] = "";
+            }
+
+            return acc;
+        }, {});
+
     const ref = useRef<null | HTMLInputElement>(null);
     const hiddenRef = useRef<null | HTMLInputElement>(null);
     const [file, setFile] = useState<null | File>(null);
@@ -24,7 +36,7 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [fileErr, setFileErr] = useState("");
+    const [fileErrValueToBeChecked, setFileErrorValueToBeChecked] = useState(errValueToBeCheckedObj);
     const [errorState, setErrorState] = useState<TErrorState>({
         shouldShowErr: false,
         shouldHighlightErr: false,
@@ -32,9 +44,14 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
 
     const uploadFileToClient = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
-        setFileErr("");
         if (event.target.files && event.target.files[0]) {
             const newFile = event.target.files[0];
+
+            const fileExtension = newFile.name.split(".").reverse()[0];
+            const fileSize = newFile.size;
+            setFileErrorValueToBeChecked({ ...fileErrValueToBeChecked, fileSize: fileSize, fileType: fileExtension });
+
+            setErrorState({ ...errorState, shouldHighlightErr: true });
             setFile(newFile);
             if (newFile.type.startsWith("image/")) {
                 setImageObjectUrl(URL.createObjectURL(newFile));
@@ -46,7 +63,7 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
         event.preventDefault();
         const formData = new FormData();
         if (!file) {
-            setFileErr("clientErr");
+            setFileErrorValueToBeChecked({ ...fileErrValueToBeChecked, file: "clientErr" });
             throw new Error("Must have a valid file");
         }
         formData.append("file", file);
@@ -58,9 +75,6 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
             });
 
             if (response.status === 200) {
-                setFileErr("");
-                setErrorState({ ...errorState, shouldShowErr: false, shouldHighlightErr: false });
-
                 const resJson = await response.json();
                 setServerRef(resJson);
                 setSuccess(true);
@@ -73,7 +87,7 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
             }
         } catch (err) {
             console.error(err);
-            setFileErr("serverErr");
+            setFileErrorValueToBeChecked({ ...fileErrValueToBeChecked, file: "serverErr" });
             setErrorState({ ...errorState, shouldHighlightErr: true });
         } finally {
             // load animation looks good so we must wait for it for at least 1 more second
@@ -84,7 +98,6 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
 
     const clearFile = (event?: MouseEvent<HTMLButtonElement>) => {
         event && event.preventDefault();
-        setFileErr("");
         setServerRef("");
         setErrorState({ ...errorState, shouldShowErr: false, shouldHighlightErr: false });
         setSuccess(false);
@@ -179,12 +192,6 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
 
                 <span>📂 {children || "Upload file"}</span>
             </label>
-            {errorCallbacks && (
-                <InputError
-                    {...{ value: fileErr, errors: errorCallbacks, errorState: errorState }}
-                    {...inputErrorEventsHandlers}
-                />
-            )}
         </div>
     );
 };
