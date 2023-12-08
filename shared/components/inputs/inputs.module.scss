@@ -58,14 +58,14 @@
 .textInputErrors {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 100%;
+    right: 1rem;
+    width: 2rem;
     height: calc(100% - 8px);
     font-size: 0.8rem;
-    z-index: 40;
+    z-index: 60;
     & .inputErrorFlag {
         position: absolute;
-        left: calc(100% + 0.5rem);
+        right: 0;
         top: 2.2rem;
         display: flex;
         align-items: center;
@@ -75,9 +75,10 @@
 
     & .inputErrorList {
         position: absolute;
+        width: 200px;
         top: auto;
-        bottom: 75%;
-        right: 0;
+        bottom: calc(100% - 1rem);
+        right: -1rem;
         background-color: black;
         color: white;
         border-radius: 0.5rem;
@@ -101,6 +102,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: calc(v.$gap / 2);
+    margin: 1rem 0rem;
 
     & .checkbox {
         width: 0px;
@@ -127,7 +129,7 @@
             padding: 3px;
             padding-left: 3px;
             cursor: pointer;
-            transition: padding 200ms, border 200ms;
+            transition: padding 200ms, border 200ms, box-shadow 200ms;
 
             &:hover {
                 border-color: v.$mainColor;
@@ -171,10 +173,11 @@
     flex-wrap: wrap;
     position: relative;
     background-color: white;
+    border: 1px dashed v.$gray;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     margin-top: 1rem;
-    padding: 2rem;
+    padding: 1rem;
 
     & .fileContainer {
         max-width: 40%;
@@ -230,6 +233,7 @@
         justify-content: flex-start;
         align-items: center;
         background-color: v.$lightGray;
+        margin: 3.85rem 0rem;
         border: 1px solid v.$gray;
         color: black;
         padding: 0.4rem 0.8rem;
@@ -243,7 +247,15 @@
         }
     }
 
-    &:focus {
+    & .fileLoaded {
+        width: 0%;
+        height: 0%;
+        opacity: 0;
+        overflow: hidden;
+    }
+
+    &:focus-within {
+        border-color: v.$secondaryColor;
         & .fileLabel {
             border-color: v.$secondaryColor;
             box-shadow: 0px 5px 10px -5px rgba($color: v.$secondaryColor, $alpha: 0.2);
@@ -259,5 +271,21 @@
                 color: v.$mainColor;
             }
         }
+    }
+}
+
+.formBtnContainer {
+    display: flex;
+    align-items: center;
+    &.left {
+        justify-content: flex-start;
+    }
+
+    &.center {
+        justify-content: center;
+    }
+
+    &.right {
+        justify-content: flex-end;
     }
 }

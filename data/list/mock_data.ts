@@ -6,3 +6,5 @@ export const mock_listItems: TListItemProps[] = [
     { id: "thirdItem", children: "Third list item" },
     { id: "fourthItem", children: "Fourth list item" },
 ];
+
+export default mock_listItems;

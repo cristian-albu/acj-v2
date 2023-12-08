@@ -57,7 +57,17 @@ export type TInputErrorFile = {
     args?: string;
 };
 
-export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInputErrorFile;
+export type TInputErrorFileSize = {
+    validation: "fileSize";
+    args: [number, string?];
+};
+
+export type TInputErrorFileType = {
+    validation: "fileType";
+    args: [string[], string?];
+};
+
+export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInputErrorFile | TInputErrorFileSize | TInputErrorFileType;
 
 export type TErrorState = {
     focusedOnce?: boolean;
@@ -66,9 +76,10 @@ export type TErrorState = {
     shouldHighlightErr: boolean;
 };
 
-type TFileError = "clientErr" | "serverErr";
+export type TFileError = "clientErr" | "serverErr";
+
 export type TErrorProps = {
-    value: string | TFileError;
+    value: string | number | TFileError;
     errors: TInputError[];
 };
 
@@ -100,5 +111,6 @@ export type TDynamicFormProps = {
     formButton: {
         text: string;
         action: (data: any) => void;
+        placement?: "left" | "center" | "right";
     };
 };

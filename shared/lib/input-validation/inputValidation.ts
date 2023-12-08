@@ -65,6 +65,12 @@ export const validateMinMaxLength = (
     return output;
 };
 
+/**
+ *
+ * @param value
+ * @param customError
+ * @returns
+ */
 export const validateFile = (value: "clientErr" | "serverErr" | string, customError?: string): TvalidationReturn => {
     let output: TvalidationReturn = { isValid: true, error: "" };
 
@@ -74,6 +80,40 @@ export const validateFile = (value: "clientErr" | "serverErr" | string, customEr
 
     if (value === "serverErr") {
         output = { isValid: false, error: customError || "An error has occurred while uploading the file" };
+    }
+
+    return output;
+};
+
+/**
+ *
+ * @param value
+ * @param size
+ * @param customError
+ * @returns
+ */
+export const validateFileSize = (value: number, size: number, customError?: string): TvalidationReturn => {
+    let output: TvalidationReturn = { isValid: true, error: "" };
+
+    if (value > size) {
+        output = { isValid: false, error: customError || "File is too big. Please upload a smaller one" };
+    }
+
+    return output;
+};
+
+/**
+ *
+ * @param value
+ * @param allowed
+ * @param customError
+ * @returns
+ */
+export const validateFileType = (value: string, allowed: string[], customError?: string): TvalidationReturn => {
+    let output: TvalidationReturn = { isValid: true, error: "" };
+
+    if (!allowed.includes(value)) {
+        output = { isValid: false, error: customError || "File type is not allowed" };
     }
 
     return output;
