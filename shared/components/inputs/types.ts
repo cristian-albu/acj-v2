@@ -1,12 +1,38 @@
-import React, { ChangeEvent, FocusEvent, HTMLAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { TvalidationReturn } from "@/shared/lib/input-validation/inputValidation";
+import React, {
+    ChangeEvent,
+    Dispatch,
+    FocusEvent,
+    HTMLAttributes,
+    InputHTMLAttributes,
+    SetStateAction,
+    TextareaHTMLAttributes,
+} from "react";
 
 export type TSwitch = { id?: string } & TChildren & InputHTMLAttributes<HTMLInputElement>;
 
 export type TEventItem = HTMLInputElement | HTMLTextAreaElement;
+
+export type TInputEvent = (event: ChangeEvent<TEventItem>) => any;
+
 export type TInputEvents = {
-    onChange?: (event: ChangeEvent<TEventItem>) => any;
-    onBlur?: (event: FocusEvent<TEventItem>) => any;
-    onFocus?: (event: FocusEvent<TEventItem>) => any;
+    onChange?: TInputEvent;
+    onBlur?: TInputEvent;
+    onFocus?: TInputEvent;
+};
+
+export type TErrorEventHandlers = {
+    onMouseEnter?: TInputEvent;
+    onMouseLeave?: TInputEvent;
+};
+
+export type TInputFocusAndErrorStateReturn = {
+    errorState: TErrorState;
+    setShowErr: Dispatch<SetStateAction<TErrorState>>;
+    focusedState: TFocusedState;
+    setFocusedState: Dispatch<SetStateAction<TFocusedState>>;
+    eventHandlers: TInputEvents;
+    inputErrorEventsHandlers: TErrorEventHandlers;
 };
 
 type TGenericInput = {
@@ -26,10 +52,14 @@ type TGenericInput = {
     errorCallbacks?: TInputError[];
 };
 
-export type TFileInput = { id?: string; children?: React.ReactNode } & TGenericInput;
+export type TFileInput = {
+    uploadToServerData: { endpoint: string };
+    id?: string;
+    children?: React.ReactNode;
+} & TGenericInput;
 
 export type TTextInput = {
-    type?: "text" | "number";
+    type?: "text" | "number" | "password";
 } & InputHTMLAttributes<HTMLInputElement> &
     TGenericInput &
     TChildren &
@@ -70,35 +100,21 @@ export type TInputErrorFileType = {
 export type TInputError = TInputErrorBasic | TInputErrorMinMax | TInputErrorFile | TInputErrorFileSize | TInputErrorFileType;
 
 export type TErrorState = {
-    focusedOnce?: boolean;
-    isFocused?: boolean;
     shouldShowErr: boolean;
     shouldHighlightErr: boolean;
 };
 
-export type TFileError = "clientErr" | "serverErr";
-
-export type TErrorProps = {
-    value: string | number;
-    errors: TInputError[];
-    errType: "text";
+export type TFocusedState = {
+    focusedOnce: boolean;
+    isFocused: boolean;
 };
 
-export type TErrorFileProps = {
-    value: { [key: string]: string | number | TFileError };
-    errType: "file";
-    errors: TInputError[];
-};
-
-export type TInputErrorProps = {
-    errorState: TErrorState;
-} & (TErrorProps | TErrorFileProps) &
-    HTMLAttributes<HTMLDivElement>;
+export type TInputErrorProps = { errorList: TvalidationReturn[]; errorState: TErrorState };
 
 // Form
 
 export type TDynamicFormInputText = {
-    type: "text" | "textarea" | "number";
+    type: "text" | "textarea" | "number" | "password";
 } & (TTextInput | TTextareaInput);
 
 export type TDynamicFormInputSwitch = {
@@ -113,6 +129,47 @@ export type TDynamicFormInput = {
     id: string;
 } & (TDynamicFormInputText | TDynamicFormInputFile | TDynamicFormInputSwitch);
 
+/**
+ * @example 
+ * inputList: [
+        {
+            type: "text",
+            children: "Email Input",
+            id: "id1",
+            errorCallbacks: [{ validation: "email" }],
+            defaultValue: "Default text",
+        },
+        { type: "text", children: "Slug input", id: "id2", errorCallbacks: [{ validation: "slug" }] },
+        { type: "text", children: "Text input", id: "id3", errorCallbacks: [{ validation: "minmax", args: [1, 64] }] },
+        { type: "number", children: "Text input", id: "id4", errorCallbacks: [{ validation: "minmax", args: [1, 2] }] },
+        { type: "textarea", children: "Textarea", id: "id5", errorCallbacks: [{ validation: "minmax", args: [1, 128] }] },
+        {
+            uploadToServerData: { endpoint: "/api/file" },
+            type: "file",
+            children: "File upload",
+            id: "id6",
+            errorCallbacks: [
+                { validation: "file" },
+                { validation: "fileSize", args: [5000] },
+                { validationType: "fileType", args: [["png", "jpg"]] },
+            ],
+        },
+        {
+            type: "file",
+            children: "File upload 2",
+            uploadToServerData: { endpoint: "/api/file" },
+            id: "id7",
+            errorCallbacks: [{ validation: "file" }],
+        },
+        { type: "switch", children: "Switch input", id: "id8" },
+    ],
+    formButton: {
+        text: "🖥️ Submit",
+        action: (data) => console.log(data),
+        placement: "right",
+    },
+};
+ */
 export type TDynamicFormProps = {
     inputList: TDynamicFormInput[];
     formButton: {

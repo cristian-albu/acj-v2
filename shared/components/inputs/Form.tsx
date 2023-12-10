@@ -26,7 +26,7 @@ const Form: React.FC<TDynamicFormProps> = ({ inputList, formButton }) => {
     return (
         <form ref={formRef}>
             {inputList.map((input) => {
-                if (input.type === "text" || input.type === "number") {
+                if (input.type === "text" || input.type === "number" || input.type === "password") {
                     const { type, id, errorCallbacks, children, ...rest } = input;
                     return (
                         <TextInput type={type} id={id} key={id} errorCallbacks={errorCallbacks} {...rest}>
@@ -48,9 +48,9 @@ const Form: React.FC<TDynamicFormProps> = ({ inputList, formButton }) => {
                         </Switch>
                     );
                 } else if (input.type === "file") {
-                    const { id, children, errorCallbacks } = input;
+                    const { uploadToServerData, id, children, errorCallbacks } = input;
                     return (
-                        <FileInput id={id} key={id} errorCallbacks={errorCallbacks}>
+                        <FileInput uploadToServerData={uploadToServerData} id={id} key={id} errorCallbacks={errorCallbacks}>
                             {children}
                         </FileInput>
                     );

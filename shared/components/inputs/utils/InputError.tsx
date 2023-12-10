@@ -1,38 +1,13 @@
 "use client";
 import React from "react";
-import { TInputErrorProps } from "../types";
-import {
-    TvalidationReturn,
-    validateFile,
-    validateFileSize,
-    validateFileType,
-} from "@/shared/lib/input-validation/inputValidation";
-import checkInputErrors from "./checkInputErrors";
 import styles from "../inputs.module.scss";
+import { TInputErrorProps } from "../types";
+import { TvalidationReturn } from "@/shared/lib/input-validation/inputValidation";
 
-const InputError: React.FC<TInputErrorProps> = ({ errType, value, errors, errorState, ...rest }) => {
-    let errorList: TvalidationReturn[] = [];
-
-    if (errType === "text") {
-        errorList = checkInputErrors({ value, errors });
-    } else {
-        errorList = [];
-
-        // const results = Object.entries(value).map(([key, val]) => {
-        //     switch (key) {
-        //         case "file":
-        //             return validateFile(val as string, errors.);
-        //         case "fileSize":
-        //             return validateFileSize(val, ...error.args);
-        //         case "fileType":
-        //             return validateFileType(val, ...error.args);
-        //     }
-        // });
-    }
-
+const InputError: React.FC<TInputErrorProps> = ({ errorList, errorState, ...rest }) => {
     return (
         <div className={styles.textInputErrors}>
-            {errorList.length && errorState.shouldHighlightErr && (
+            {errorList.length > 0 && errorState.shouldHighlightErr && (
                 <div className={styles.inputErrorFlag} {...rest}>
                     <p>🚩</p> <p>{errorList.length}</p>
                 </div>

@@ -14,6 +14,7 @@ const mock_formData: TDynamicFormProps = {
         { type: "number", children: "Text input", id: "id4", errorCallbacks: [{ validation: "minmax", args: [1, 2] }] },
         { type: "textarea", children: "Textarea", id: "id5", errorCallbacks: [{ validation: "minmax", args: [1, 128] }] },
         {
+            uploadToServerData: { endpoint: "/api/file" },
             type: "file",
             children: "File upload",
             id: "id6",
@@ -23,7 +24,13 @@ const mock_formData: TDynamicFormProps = {
                 { validation: "fileType", args: [["png", "jpg"]] },
             ],
         },
-        { type: "file", children: "File upload 2", id: "id7", errorCallbacks: [{ validation: "file" }] },
+        {
+            type: "file",
+            children: "File upload 2",
+            uploadToServerData: { endpoint: "/api/file" },
+            id: "id7",
+            errorCallbacks: [{ validation: "file" }],
+        },
         { type: "switch", children: "Switch input", id: "id8" },
     ],
     formButton: {

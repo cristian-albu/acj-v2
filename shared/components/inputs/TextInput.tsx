@@ -1,59 +1,92 @@
 "use client";
-import React, { InputHTMLAttributes, TextareaHTMLAttributes, useState } from "react";
-import { TErrorState, TInputEvents, TTextInput, TTextareaInput } from "./types";
+import React, {
+    ChangeEvent,
+    InputHTMLAttributes,
+    MutableRefObject,
+    TextareaHTMLAttributes,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
+import { TInputError, TTextInput, TTextareaInput } from "./types";
 import styles from "./inputs.module.scss";
+import {
+    TvalidationReturn,
+    validateEmail,
+    validateMinMaxLength,
+    validateSlug,
+} from "@/shared/lib/input-validation/inputValidation";
 import InputError from "./utils/InputError";
+import useInputFocusAndErrorState from "./utils/useFocusAndErrorState";
+import debounce from "@/shared/lib/dbounce";
 
 const TextInput: React.FC<TTextInput | TTextareaInput> = ({
     id,
     type,
     errorCallbacks,
-    onChange: changeCallback,
     onFocus: focusCallback,
     onBlur: blurCallback,
+    onChange: changeCallback,
     children,
     ...elementProps
 }) => {
-    const [value, setValue] = useState("");
-    const [errorState, setShowErr] = useState<TErrorState>({
-        focusedOnce: false,
-        isFocused: false,
-        shouldShowErr: false,
-        shouldHighlightErr: false,
-    });
+    const { errorState, eventHandlers, inputErrorEventsHandlers } = useInputFocusAndErrorState(
+        (focusCallback = focusCallback),
+        (blurCallback = blurCallback)
+    );
 
-    const eventHandlers: TInputEvents = {
-        onChange: (event) => {
-            setValue(event.currentTarget.value);
-            changeCallback && changeCallback(event);
-        },
-        onFocus: (event) => {
-            if (errorState.focusedOnce) {
-                setShowErr({ ...errorState, shouldShowErr: true, shouldHighlightErr: true, isFocused: true });
-            } else {
-                setShowErr({ ...errorState, focusedOnce: true, isFocused: true });
-            }
+    const [errorListObject, setErrorListObject] = useState<{ [key: string]: TvalidationReturn }>({});
 
-            focusCallback && focusCallback(event);
-        },
-        onBlur: (event) => {
-            if (errorState.focusedOnce) {
-                setShowErr({ ...errorState, shouldShowErr: false, shouldHighlightErr: true, isFocused: false });
-            }
-            blurCallback && blurCallback(event);
-        },
+    const [value, setValue] = useState(elementProps.defaultValue?.toString() || "");
+
+    const onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setValue(event?.target.value);
+        changeCallback && changeCallback(event);
     };
 
-    const inputErrorEventsHandlers = {
-        onMouseEnter: () => {
-            setShowErr({ ...errorState, shouldShowErr: true });
-        },
-        onMouseLeave: () => {
-            if (!errorState.isFocused) {
-                setShowErr({ ...errorState, shouldShowErr: false });
-            }
-        },
+    const validateValue = () => {
+        if (errorCallbacks) {
+            errorCallbacks.map((error: TInputError) => {
+                switch (error.validation) {
+                    case "email":
+                        const resultEmail = validateEmail(value, error.args);
+                        setErrorListObject((prevState) => ({
+                            ...prevState,
+                            email: resultEmail.isValid ? { isValid: true, error: "" } : resultEmail,
+                        }));
+                        break;
+                    case "minmax":
+                        const resultMinMax = validateMinMaxLength(value, ...error.args);
+                        setErrorListObject((prevState) => ({
+                            ...prevState,
+                            minmax: resultMinMax.isValid ? { isValid: true, error: "" } : resultMinMax,
+                        }));
+                        break;
+                    case "slug":
+                        const resultSlug = validateSlug(value, error.args);
+                        setErrorListObject((prevState) => ({
+                            ...prevState,
+                            slug: resultSlug.isValid ? { isValid: true, error: "" } : resultSlug,
+                        }));
+                        break;
+                }
+            });
+        }
     };
+
+    const debouncedValidate = debounce(validateValue, 300);
+
+    useEffect(() => {
+        // Trigger the debounced validation function when the value changes
+        debouncedValidate();
+
+        // Cleanup the debounced function on component unmount
+        return () => {
+            debouncedValidate.cancel();
+        };
+    }, [value]);
+
+    const errorList = Object.values(errorListObject).filter((e) => !e.isValid);
 
     return (
         <label className={styles.textInputLabel}>
@@ -62,6 +95,7 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
                 <textarea
                     id={id}
                     className={`${styles.textInput} ${styles.textarea}`}
+                    {...onChange}
                     {...eventHandlers}
                     {...(elementProps as TextareaHTMLAttributes<HTMLTextAreaElement>)} // reson to hate typescript no. 1
                 />
@@ -70,20 +104,12 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
                     id={id}
                     className={styles.textInput}
                     type={type || "text"}
+                    {...onChange}
                     {...eventHandlers}
                     {...(elementProps as InputHTMLAttributes<HTMLInputElement>)} // reson to hate typescript no. 2
                 />
             )}
-
-            {errorCallbacks && (
-                <InputError
-                    errType="text"
-                    value={value}
-                    errors={errorCallbacks}
-                    errorState={errorState}
-                    {...inputErrorEventsHandlers}
-                />
-            )}
+            {errorCallbacks && <InputError errorList={errorList} errorState={errorState} {...inputErrorEventsHandlers} />}
         </label>
     );
 };

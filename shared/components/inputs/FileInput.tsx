@@ -1,10 +1,12 @@
 "use client";
 import React, { ChangeEvent, MouseEvent, useRef, useState } from "react";
 import styles from "./inputs.module.scss";
-import InputError from "./utils/InputError";
-import { TErrorState, TFileInput, TInputError } from "./types";
+import { TErrorState, TFileInput } from "./types";
 import Button from "../layout/Button";
 import Loading from "../layout/Loading";
+import InputError from "./utils/InputError";
+import { TvalidationReturn } from "@/shared/lib/input-validation/inputValidation";
+import useInputFocusAndErrorState from "./utils/useFocusAndErrorState";
 
 /**
  * Upload a file to the client and then save it to the server. The sever should respond with the resource link from the database and that will become the new value of the input.
@@ -15,43 +17,28 @@ import Loading from "../layout/Loading";
  * <input type="file" server-file-ref="https://domain.com/image" />
  * const data = event.target.attributes.getNamesItem('server-file-ref').value
  */
-const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
-    const errValueToBeCheckedObj =
-        errorCallbacks &&
-        errorCallbacks.reduce((acc: { [key: string]: string | number }, curr: TInputError) => {
-            if (curr.validation === "fileSize") {
-                acc[curr.validation] = 0;
-            } else {
-                acc[curr.validation] = "";
-            }
-
-            return acc;
-        }, {});
-
+const FileInput: React.FC<TFileInput> = ({ uploadToServerData, id, children, errorCallbacks }) => {
     const ref = useRef<null | HTMLInputElement>(null);
     const hiddenRef = useRef<null | HTMLInputElement>(null);
+
+    // File related state
     const [file, setFile] = useState<null | File>(null);
-    const [generateImageObjectUrl, setImageObjectUrl] = useState<null | string>(null);
+    const fileExtension = file && file.name.split(".").reverse()[0];
+    const fileSize = file && file.size;
+    const [generatedImageObjectUrl, setImageObjectUrl] = useState<null | string>(null);
     const [serverRef, setServerRef] = useState<null | any>(null);
+
+    // Ui related state
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [fileErrValueToBeChecked, setFileErrorValueToBeChecked] = useState(errValueToBeCheckedObj);
-    const [errorState, setErrorState] = useState<TErrorState>({
-        shouldShowErr: false,
-        shouldHighlightErr: false,
-    });
+    const [errorList, setErrorList] = useState<TvalidationReturn[]>([]);
+    const { errorState, eventHandlers, inputErrorEventsHandlers } = useInputFocusAndErrorState();
 
     const uploadFileToClient = (event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
         if (event.target.files && event.target.files[0]) {
             const newFile = event.target.files[0];
-
-            const fileExtension = newFile.name.split(".").reverse()[0];
-            const fileSize = newFile.size;
-            setFileErrorValueToBeChecked({ ...fileErrValueToBeChecked, fileSize: fileSize, fileType: fileExtension });
-
-            setErrorState({ ...errorState, shouldHighlightErr: true });
             setFile(newFile);
             if (newFile.type.startsWith("image/")) {
                 setImageObjectUrl(URL.createObjectURL(newFile));
@@ -63,13 +50,12 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
         event.preventDefault();
         const formData = new FormData();
         if (!file) {
-            setFileErrorValueToBeChecked({ ...fileErrValueToBeChecked, file: "clientErr" });
             throw new Error("Must have a valid file");
         }
         formData.append("file", file);
         try {
             setLoading(true);
-            const response = await fetch("/api/file", {
+            const response = await fetch(uploadToServerData.endpoint, {
                 method: "POST",
                 body: formData,
             });
@@ -87,8 +73,6 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
             }
         } catch (err) {
             console.error(err);
-            setFileErrorValueToBeChecked({ ...fileErrValueToBeChecked, file: "serverErr" });
-            setErrorState({ ...errorState, shouldHighlightErr: true });
         } finally {
             // load animation looks good so we must wait for it for at least 1 more second
             await new Promise((res) => setTimeout(res, 1000));
@@ -99,10 +83,9 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
     const clearFile = (event?: MouseEvent<HTMLButtonElement>) => {
         event && event.preventDefault();
         setServerRef("");
-        setErrorState({ ...errorState, shouldShowErr: false, shouldHighlightErr: false });
         setSuccess(false);
-        if (generateImageObjectUrl) {
-            URL.revokeObjectURL(generateImageObjectUrl);
+        if (generatedImageObjectUrl) {
+            URL.revokeObjectURL(generatedImageObjectUrl);
             setImageObjectUrl(null);
         }
         if (ref.current) ref.current.value = "";
@@ -120,23 +103,12 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
         );
     };
 
-    const inputErrorEventsHandlers = {
-        onMouseEnter: () => {
-            setErrorState({ ...errorState, shouldShowErr: true });
-        },
-        onMouseLeave: () => {
-            if (!errorState.isFocused) {
-                setErrorState({ ...errorState, shouldShowErr: false });
-            }
-        },
-    };
-
     return (
         <div className={styles.fileUpload} onClick={() => ref.current && ref.current.focus()}>
             {file && (
                 <>
                     <div className={styles.fileContainer}>
-                        {generateImageObjectUrl ? (
+                        {generatedImageObjectUrl ? (
                             loading ? (
                                 <Loading />
                             ) : (
@@ -145,7 +117,7 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
                                     height={900}
                                     className={styles.fileImg}
                                     alt="image upload"
-                                    src={success ? serverRef : generateImageObjectUrl}
+                                    src={success ? serverRef : generatedImageObjectUrl}
                                 />
                             )
                         ) : loading ? (
@@ -191,6 +163,9 @@ const FileInput: React.FC<TFileInput> = ({ id, children, errorCallbacks }) => {
                 />
 
                 <span>📂 {children || "Upload file"}</span>
+                {errorCallbacks && (
+                    <InputError errorList={errorList} errorState={errorState} {...inputErrorEventsHandlers} />
+                )}
             </label>
         </div>
     );
