@@ -67,8 +67,7 @@ const FileInput: React.FC<TFileInput> = ({ uploadToServerData, id, children, err
 
                 if (hiddenRef.current) {
                     hiddenRef.current.value = "loaded";
-                    const syntheticEvent = new Event("input", { bubbles: true });
-                    hiddenRef.current.dispatchEvent(syntheticEvent);
+                    hiddenRef.current.dispatchEvent(new Event("input", { bubbles: true }));
                 }
             }
         } catch (err) {

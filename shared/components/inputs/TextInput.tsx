@@ -44,7 +44,7 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
         changeCallback && changeCallback(event);
     };
 
-    const validateValue = () => {
+    const validateTextValue = () => {
         if (errorCallbacks) {
             errorCallbacks.map((error: TInputError) => {
                 switch (error.validation) {
@@ -74,7 +74,7 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
         }
     };
 
-    const debouncedValidate = debounce(validateValue, 300);
+    const debouncedValidate = debounce(validateTextValue, 300);
 
     useEffect(() => {
         // Trigger the debounced validation function when the value changes

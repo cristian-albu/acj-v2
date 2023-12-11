@@ -1,13 +1,5 @@
 import { TvalidationReturn } from "@/shared/lib/input-validation/inputValidation";
-import React, {
-    ChangeEvent,
-    Dispatch,
-    FocusEvent,
-    HTMLAttributes,
-    InputHTMLAttributes,
-    SetStateAction,
-    TextareaHTMLAttributes,
-} from "react";
+import React, { ChangeEvent, Dispatch, InputHTMLAttributes, SetStateAction, TextareaHTMLAttributes } from "react";
 
 export type TSwitch = { id?: string } & TChildren & InputHTMLAttributes<HTMLInputElement>;
 

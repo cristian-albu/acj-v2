@@ -13,12 +13,16 @@ import Section from "@/shared/components/layout/Section";
 import Title from "@/shared/components/layout/Title";
 import Wrapper from "@/shared/components/layout/Wrapper";
 import List from "@/shared/components/list/List";
+import Menu from "@/shared/components/menu/Menu";
 import React from "react";
+
+const menuPosition: "right" | "right-bottom" | "right-bottom-inner" = "right-bottom-inner";
 
 const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
+                <Menu menuPosition={menuPosition}>Menu</Menu>
                 <Row>
                     <List listItems={mock_listItems} />
                 </Row>
@@ -88,11 +92,11 @@ const StylesheetView = () => {
                 </TextInput>
                 <TextInput type="textarea">This is the textarea</TextInput>
                 <Switch>This is a switch</Switch>
-                <FileInput errorCallbacks={[{ validation: "file" }]} />
-                <FileInput errorCallbacks={[{ validation: "file" }]} />
+                <FileInput uploadToServerData={{ endpoint: "/api/file" }} errorCallbacks={[{ validation: "file" }]} />
+                <FileInput uploadToServerData={{ endpoint: "/api/file" }} errorCallbacks={[{ validation: "file" }]} />
 
                 <Card>
-                    <Title>Text</Title>
+                    <Title>Dynamic form</Title>
                     <Form {...mock_formData} />
                 </Card>
             </Wrapper>
