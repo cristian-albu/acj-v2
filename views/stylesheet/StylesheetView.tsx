@@ -16,13 +16,17 @@ import List from "@/shared/components/list/List";
 import Menu from "@/shared/components/menu/Menu";
 import React from "react";
 
-const menuPosition: "right" | "right-bottom" | "right-bottom-inner" = "right-bottom-inner";
-
 const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
-                <Menu menuPosition={menuPosition}>Menu</Menu>
+                <Menu
+                    menuPosition={"right-bottom-inner"}
+                    openOnHover={true}
+                    menuContents={<List listItems={mock_listItems} />}
+                >
+                    Menu
+                </Menu>
                 <Row>
                     <List listItems={mock_listItems} />
                 </Row>

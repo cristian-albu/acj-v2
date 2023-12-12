@@ -1,13 +1,16 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
 import styles from "./menu.module.scss";
 import { createPortal } from "react-dom";
+import { getNextFocusableElement } from "./utils/getNextFocusableElement";
 
 export type TMenuProps = {
-    menuPosition: "right" | "right-bottom" | "right-bottom-inner";
+    menuPosition?: "right" | "right-bottom" | "right-bottom-inner";
+    openOnHover?: boolean;
+    menuContents: any;
 } & TChildren;
 
-const Menu: React.FC<TMenuProps> = ({ menuPosition, children }) => {
+const Menu: React.FC<TMenuProps> = ({ menuPosition = "right", openOnHover, menuContents, children }) => {
     const targetRef = useRef<null | HTMLButtonElement>(null);
     const menuRef = useRef<null | HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -25,9 +28,18 @@ const Menu: React.FC<TMenuProps> = ({ menuPosition, children }) => {
             }
 
             if (isOpen) {
-                menuRef.current && menuRef.current.focus();
+                const firstFocusableMenuElement = getNextFocusableElement(menuRef.current);
+
+                if (firstFocusableMenuElement && firstFocusableMenuElement.role === "listbox") {
+                    const firstListItem = getNextFocusableElement(firstFocusableMenuElement);
+                    firstListItem ? firstListItem.focus() : menuRef.current.focus();
+                } else if (firstFocusableMenuElement) {
+                    firstFocusableMenuElement.focus();
+                } else {
+                    menuRef.current.focus();
+                }
             } else {
-                targetRef.current && targetRef.current.focus();
+                targetRef.current.focus();
             }
         }
     }, [isOpen]);
@@ -36,13 +48,27 @@ const Menu: React.FC<TMenuProps> = ({ menuPosition, children }) => {
         setIsOpen((prev) => !prev);
     };
 
+    const handleAnchorKeydown = (event: KeyboardEvent<HTMLButtonElement>) => {};
+
+    const handleMenuKeydown = (event: KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === "Escape") {
+            event.preventDefault();
+            setIsOpen(false);
+            targetRef.current && targetRef.current.focus();
+        }
+
+        if (event.key === "Tab") {
+            console.log("tab");
+        }
+    };
+
     return (
         <>
             <button
                 className={styles.menuAnchor}
                 ref={targetRef}
                 onClick={handleMenuOpen}
-                onKeyDown={() => console.log("anchor keys")}
+                onKeyDown={handleAnchorKeydown}
                 onFocus={() => console.log("anchor focused")}
             >
                 {children}
@@ -51,13 +77,13 @@ const Menu: React.FC<TMenuProps> = ({ menuPosition, children }) => {
                 createPortal(
                     <div
                         ref={menuRef}
-                        style={{ position: "absolute", ...computedStyles }}
+                        style={{ position: "absolute", zIndex: 99, ...computedStyles }}
                         className={styles.menuContainer}
-                        onKeyDown={() => console.log("menu keys")}
+                        onKeyDown={handleMenuKeydown}
                         onFocus={() => console.log("menu focused")}
                         tabIndex={0}
                     >
-                        <button>Some button inside</button>
+                        {menuContents}
                     </div>,
                     document.body
                 )}

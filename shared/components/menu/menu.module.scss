@@ -1,12 +1,24 @@
 .menuAnchor {
     position: relative;
     border: 1px solig gray;
-
+    cursor: pointer;
     display: flex;
     padding: 0.5rem;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .menuContainer {
     background-color: white;
     padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0rem 1rem 1rem 0rem rgba(130, 130, 130, 0.2);
+    animation: fadeIn 200ms;
 }
