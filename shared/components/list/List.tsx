@@ -5,8 +5,14 @@ import { TListItemProps, TListProps } from "./types";
 import ListItem from "./ListItem";
 import useListNavigator from "./utils/useListNavigator";
 
+/**
+ * This List component is meant for interactive elements. For non-interactive elements, use a normal ul or ol
+ * @param {string} id string
+ * @param {TListItemProps[]} listItems - list items
+ * @returns
+ */
 const List: React.FC<TListProps> = ({ id, listItems }) => {
-    const { focusIndex, nextItem, prevItem, lastItem, firstItem } = useListNavigator(listItems);
+    const { focusIndex, nextItem, prevItem, lastItem, firstItem, setFocusIndex } = useListNavigator(listItems);
 
     const handleKeydown = (event: KeyboardEvent<HTMLUListElement>) => {
         switch (event.key) {
@@ -32,7 +38,13 @@ const List: React.FC<TListProps> = ({ id, listItems }) => {
     return (
         <ul id={id} className={styles.list} tabIndex={0} role="listbox" onKeyDown={handleKeydown}>
             {listItems.map((listItem: TListItemProps, index: number) => (
-                <ListItem key={listItem.id} {...listItem} index={index} focusIndex={focusIndex}></ListItem>
+                <ListItem
+                    key={listItem.id}
+                    index={index}
+                    focusIndex={focusIndex}
+                    setFocusIndex={setFocusIndex}
+                    {...listItem}
+                />
             ))}
         </ul>
     );

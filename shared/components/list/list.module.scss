@@ -14,10 +14,14 @@
     .listItem {
         width: 100%;
         position: relative;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        transition: background-color 200ms, color 200ms;
 
         &:focus {
             z-index: 99;
-            outline: 1px solid v.$gray;
+            background-color: v.$mainColor;
+            color: white;
         }
     }
 }

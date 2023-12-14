@@ -20,11 +20,7 @@ const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
-                <Menu
-                    menuPosition={"right-bottom-inner"}
-                    openOnHover={true}
-                    menuContents={<List listItems={mock_listItems} />}
-                >
+                <Menu menuPosition={"right-bottom-inner"} menuContents={{ listItems: mock_listItems }}>
                     Menu
                 </Menu>
                 <Row>

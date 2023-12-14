@@ -25,7 +25,7 @@ const useListNavigator = (listItems: TListItemProps[]) => {
         setFocusIndex(0);
     };
 
-    return { focusIndex, nextItem, prevItem, lastItem, firstItem };
+    return { focusIndex, nextItem, prevItem, lastItem, firstItem, setFocusIndex };
 };
 
 export default useListNavigator;
