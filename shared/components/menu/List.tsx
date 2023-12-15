@@ -1,6 +1,6 @@
 "use client";
 import React, { KeyboardEvent } from "react";
-import styles from "./list.module.scss";
+import styles from "./menu.module.scss";
 import { TListItemProps, TListProps } from "./types";
 import ListItem from "./ListItem";
 import useListNavigator from "./utils/useListNavigator";
@@ -9,7 +9,9 @@ import useListNavigator from "./utils/useListNavigator";
  * This List component is meant for interactive elements. For non-interactive elements, use a normal ul or ol
  * @param {string} id string
  * @param {TListItemProps[]} listItems - list items
- * @returns
+ * @example
+ *
+ * <List id="list" listItems={listItems} />
  */
 const List: React.FC<TListProps> = ({ id, listItems }) => {
     const { focusIndex, nextItem, prevItem, lastItem, firstItem, setFocusIndex } = useListNavigator(listItems);

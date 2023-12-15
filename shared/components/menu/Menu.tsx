@@ -1,39 +1,41 @@
 "use client";
-import React, { KeyboardEvent, useEffect, useRef, useState } from "react";
+import React, { KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import styles from "./menu.module.scss";
 import { createPortal } from "react-dom";
 import { getFocusableElements } from "../../lib/getFocusableElements";
-import { TListItemProps, TListProps } from "../list/types";
-import List from "../list/List";
+import { TListItemProps, TMenuProps } from "./types";
+import List from "./List";
+import Button from "../layout/Button";
 
-export type TMenuProps = {
-    menuPosition?: "right" | "right-bottom" | "right-bottom-inner" | "left-bottom-inner";
-    menuContents: TListProps;
-} & TChildren;
-
-const Menu: React.FC<TMenuProps> = ({ menuPosition = "right", menuContents, children }) => {
+/**
+ * @param menuPosition - menu position
+ * @param menuContents - menu contents
+ * @param children - target anchor children that will open the menu. These will be placed inside a button element
+ * @example
+ * <Menu menuPosition="right" menuContents={menuContents}>
+ */
+const Menu: React.FC<TMenuProps> = ({
+    menuPosition = "right-bottom-inner",
+    targetProps,
+    menuContents,
+    setMenuChoice,
+    children,
+}) => {
     const targetRef = useRef<null | HTMLButtonElement>(null);
     const menuRef = useRef<null | HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
-    let computedStyles: { [key: string]: string | number } | null = null;
+    const [documentLoaded, setDocumentLoaded] = useState(false);
+    const [computedStyles, setComputedStyles] = useState({});
+    const menuId = useId();
+    const targetId = useId();
 
-    if (targetRef.current && menuRef.current) {
-        const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = targetRef.current;
-        const { offsetWidth: menuWith } = menuRef.current;
-
-        if (menuPosition === "right") {
-            computedStyles = { left: offsetLeft + offsetWidth, top: offsetTop };
-        } else if (menuPosition === "right-bottom-inner") {
-            computedStyles = { left: offsetLeft + offsetWidth - menuWith, top: offsetTop + offsetHeight };
-        }
-    }
-
-    const listItems = menuContents.listItems.map((listItem: TListItemProps) => ({
+    const listItems = menuContents.listItems.map((listItem: TListItemProps, index: number) => ({
         id: listItem.id,
         children: listItem.children,
         onClick: () => {
             listItem.onClick && listItem.onClick();
             setIsOpen(false);
+            setMenuChoice && setMenuChoice(index);
         },
     }));
 
@@ -81,17 +83,80 @@ const Menu: React.FC<TMenuProps> = ({ menuPosition = "right", menuContents, chil
         }
     };
 
+    // This is a hack to get the menu to render in the correct position
+    // The menu needs to be rendered in the DOM before we can get its width
+    // We can't get the width of the menu before it is rendered in the DOM
+    // We can't render the menu in the DOM before we get its width
+    // So we render the menu in the DOM, get its width, and then render it in the correct position
+    useEffect(() => {
+        const computeMenuStyle = () => {
+            const borderRadiusR = "3px 10px 10px 10px";
+            const borderRadiusL = "10px 3px 10px 10px";
+            if (targetRef.current && menuRef.current) {
+                const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = targetRef.current;
+                const { offsetWidth: menuWidth } = menuRef.current;
+
+                if (menuPosition === "right") {
+                    setComputedStyles({
+                        left: offsetLeft + offsetWidth,
+                        top: offsetTop,
+                        borderRadius: borderRadiusR,
+                    });
+                } else if (menuPosition === "left") {
+                    setComputedStyles({ left: offsetLeft - menuWidth, top: offsetTop, borderRadius: borderRadiusL });
+                } else if (menuPosition === "right-bottom") {
+                    setComputedStyles({
+                        left: offsetLeft + offsetWidth,
+                        top: offsetTop + offsetHeight,
+                        borderRadius: borderRadiusR,
+                    });
+                } else if (menuPosition === "left-bottom") {
+                    setComputedStyles({
+                        left: offsetLeft - menuWidth,
+                        top: offsetTop + offsetHeight,
+                        borderRadius: borderRadiusL,
+                    });
+                } else if (menuPosition === "right-bottom-inner") {
+                    setComputedStyles({
+                        left: offsetLeft + offsetWidth - menuWidth,
+                        top: offsetTop + offsetHeight,
+                        borderRadius: "10px 3px 10px 10px",
+                    });
+                } else if (menuPosition === "left-bottom-inner") {
+                    setComputedStyles({
+                        left: offsetLeft,
+                        top: offsetTop + offsetHeight,
+                        borderRadius: borderRadiusR,
+                    });
+                }
+            }
+        };
+
+        const handleResize = () => {
+            computeMenuStyle();
+        };
+
+        if (!documentLoaded) {
+            setDocumentLoaded(true);
+        }
+
+        computeMenuStyle();
+
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [documentLoaded]);
+
     useEffect(() => {
         if (targetRef.current && menuRef.current) {
             if (isOpen) {
                 document.addEventListener("mousedown", handleOutSideMenuClick);
                 const { firstElement } = getFocusableElements(menuRef.current);
 
-                if (firstElement && firstElement.role === "listbox") {
+                if (firstElement) {
                     const { firstElement: firstListItem } = getFocusableElements(firstElement);
                     firstListItem ? firstListItem.focus() : menuRef.current.focus();
-                } else if (firstElement) {
-                    firstElement.focus();
                 } else {
                     menuRef.current.focus();
                 }
@@ -107,19 +172,30 @@ const Menu: React.FC<TMenuProps> = ({ menuPosition = "right", menuContents, chil
 
     return (
         <>
-            <button className={styles.menuAnchor} ref={targetRef} onClick={handleMenuOpen}>
+            <Button
+                id={targetId}
+                ref={targetRef}
+                onClick={handleMenuOpen}
+                aria-haspopup={true}
+                aria-controls={menuId}
+                aria-expanded={isOpen}
+                {...targetProps}
+            >
                 {children}
-            </button>
-            {isOpen &&
+            </Button>
+            {documentLoaded &&
                 createPortal(
                     <div
                         ref={menuRef}
-                        style={{ position: "absolute", zIndex: 99, ...computedStyles }}
+                        id={menuId}
+                        role="menu"
+                        aria-labelledby={targetId}
+                        style={{ position: "absolute", zIndex: 99, scale: isOpen ? "1" : "0", ...computedStyles }}
                         className={styles.menuContainer}
                         onKeyDown={handleMenuKeydown}
-                        tabIndex={0}
+                        tabIndex={isOpen ? 0 : -1}
                     >
-                        <List listItems={listItems} id={menuContents.id} />
+                        {<List listItems={listItems} id={menuContents.id} />}
                     </div>,
                     document.body
                 )}

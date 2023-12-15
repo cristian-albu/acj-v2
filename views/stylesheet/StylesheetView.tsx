@@ -12,7 +12,7 @@ import Row from "@/shared/components/layout/Row";
 import Section from "@/shared/components/layout/Section";
 import Title from "@/shared/components/layout/Title";
 import Wrapper from "@/shared/components/layout/Wrapper";
-import List from "@/shared/components/list/List";
+import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
 import React from "react";
 
@@ -20,9 +20,6 @@ const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
-                <Menu menuPosition={"right-bottom-inner"} menuContents={{ listItems: mock_listItems }}>
-                    Menu
-                </Menu>
                 <Row>
                     <List listItems={mock_listItems} />
                 </Row>
@@ -86,6 +83,8 @@ const StylesheetView = () => {
                     <Button btnType="secondary" btnStyle="outline">
                         Button text
                     </Button>
+
+                    <Menu menuContents={{ listItems: mock_listItems }}>Menu</Menu>
                 </Row>
                 <TextInput errorCallbacks={[{ validation: "minmax", args: [1, 10] }]} defaultValue={"Value"}>
                     This is the description

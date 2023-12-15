@@ -13,21 +13,21 @@ export type TWrapper = {
 
 export type TRow = {} & HTMLAttributes<HTMLDivElement> & TChildren;
 
-type TGenericButton = {
+export type TGenericButtonProps = {
     btnType?: "primary" | "secondary";
     btnStyle?: "outline";
     theme?: "light" | "dark";
 };
 
-export type TButton = TGenericButton & ButtonHTMLAttributes<HTMLButtonElement> & TChildren;
+export type TButton = TGenericButtonProps & ButtonHTMLAttributes<HTMLButtonElement> & TChildren;
 
 type TGenericLinkButton = {
     href: string;
     linkStyle?: "linkText" | "linkButton";
 };
-type TInternalButtonLink = TGenericLinkButton & LinkProps & TChildren & TGenericButton;
+type TInternalButtonLink = TGenericLinkButton & LinkProps & TChildren & TGenericButtonProps;
 
-type TExternalButtonLink = TGenericLinkButton & AnchorHTMLAttributes<HTMLAnchorElement> & TChildren & TGenericButton;
+type TExternalButtonLink = TGenericLinkButton & AnchorHTMLAttributes<HTMLAnchorElement> & TChildren & TGenericButtonProps;
 
 export type TButtonLink = TInternalButtonLink | TExternalButtonLink;
 
