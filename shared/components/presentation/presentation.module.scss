@@ -1,60 +1,70 @@
-@use "/app/_variables.scss" as v;
-
-.sliderContainer {
+.sliderWrapper {
     width: 100%;
     position: relative;
     aspect-ratio: 16/9;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-    & .slider {
+    & .sliderContainer {
         width: 100%;
-        position: absolute;
-        width: 100vw;
         height: 100%;
-        transition: opacity 0.3s ease-in-out;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
 
-        & .arrowContainer {
-            position: absolute;
-            top: 0;
-            left: 0;
+        & .presItem {
+            width: 33.33%;
+            aspect-ratio: 16/9;
+            flex-grow: 0;
+            flex-shrink: 0;
+            position: relative;
             display: flex;
-            justify-content: space-between;
+            left: 33%;
+            justify-content: center;
             align-items: center;
-            width: 100%;
-            padding: 2rem;
-            height: 100%;
-
-            & > button {
-                z-index: 99;
-            }
+            cursor: grab;
+            transition: scale 0.5s ease-in-out, translate 0.5s ease-in-out;
         }
 
-        & .sliderWrapper {
+        & .imgContainer {
             width: 100%;
-            position: relative;
             height: 100%;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            transition: left 0.33s ease-in-out;
-
-            & .image {
-                position: relative;
-                flex-shrink: 0;
-                aspect-ratio: 16/9;
-                overflow: hidden;
-                border-radius: 5px;
-                box-shadow: 0.3rem 1rem 1rem 0.2rem rgba(0, 0, 0, 0.2);
-                cursor: grab;
-                transition: transform 0.2s ease-in-out;
-            }
 
             & .img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                object-position: center;
                 pointer-events: none;
             }
         }
+    }
+    & .btnContainer {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        & > button {
+            z-index: 50;
+        }
+    }
+
+    & .sliderMenu {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        align-items: center;
     }
 }

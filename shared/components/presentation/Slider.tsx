@@ -1,84 +1,126 @@
 "use client";
-import React, { CSSProperties, DragEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./presentation.module.scss";
-import { TLightBoxProps } from "./types";
+import { TImage, TPresentationItem, TSliderComponent, TSliderProps } from "./types";
 import Image from "next/image";
 import Button from "../layout/Button";
 
-const sliderWidthToken = 600;
-const initialWrapperLeftValue = -sliderWidthToken / 2;
+const Slider: React.FC<TSliderProps> = ({ type, sliderItems }) => {
+    const dragStartVal = useRef<number>(0);
 
-const Slider: React.FC<TLightBoxProps> = ({ data }) => {
-    const initialData = data.length > 4 ? [...data] : [...data, ...data, ...data, ...data];
-    const containerRef = useRef<null | HTMLDivElement>(null);
+    const [currIndex, setCurrIndex] = useState(1);
 
-    const [sliderStyle, setSliderStyle] = useState<CSSProperties>({ opacity: 0 });
-    const [wrapperLeftValue, setWrapperLeftValue] = useState<number>(initialWrapperLeftValue);
-
-    const [sliderData, setSliderData] = useState(initialData);
-
-    const handleLeftArrow = () => {
-        setWrapperLeftValue((prevValue) => prevValue + sliderWidthToken * 1.25);
-        setSliderData((prevData) => [prevData[prevData.length - 1], ...prevData.slice(0, prevData.length - 1)]);
+    const handleSetIndex = (index: number) => {
+        setCurrIndex(index);
     };
 
-    const handleRightArrow = () => {
-        setWrapperLeftValue((prevValue) => prevValue - sliderWidthToken * 1.25);
-        setSliderData((prevData) => [...prevData.slice(1), prevData[0]]);
-    };
-
-    const onSliderKeydown = (event: KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === "ArrowLeft") {
-            handleLeftArrow();
-        }
-        if (event.key === "ArrowRight") {
-            handleRightArrow();
-        }
-    };
-
-    useEffect(() => {
-        containerRef.current &&
-            setSliderStyle({ ...sliderStyle, left: `-${containerRef.current.offsetLeft}px`, opacity: 1 });
-    }, []);
-
-    const dragStartVal = useRef(0);
-
-    const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
-        event.dataTransfer.setDragImage(new window.Image(), 0, 0);
-        dragStartVal.current = event.clientX;
-    };
-
-    const handleDragEnd = (event: DragEvent<HTMLDivElement>) => {
-        if (dragStartVal.current > event.clientX) {
-            handleRightArrow();
+    const handlePrevious = () => {
+        if (currIndex === 0) {
+            setCurrIndex(sliderItems.length - 1);
         } else {
-            handleLeftArrow();
+            setCurrIndex(currIndex - 1);
+        }
+    };
+
+    const handleNext = () => {
+        if (currIndex === sliderItems.length - 1) {
+            setCurrIndex(0);
+        } else {
+            setCurrIndex(currIndex + 1);
+        }
+    };
+
+    const eventHandlers = {
+        onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {
+            const touch = e.touches[0];
+            dragStartVal.current = touch.clientX;
+        },
+        onTouchEnd: (e: React.TouchEvent<HTMLDivElement>) => {
+            const touch = e.changedTouches[0];
+            const touchEndVal = touch.clientX;
+            if (touchEndVal - dragStartVal.current > 0) {
+                handlePrevious();
+            } else if (touchEndVal - dragStartVal.current < 0) {
+                handleNext();
+            }
+        },
+        onDragStart: (e: React.DragEvent<HTMLDivElement>) => {
+            const newEmptyImg = new window.Image(); // so it does not show the dragged item with half opacity
+            newEmptyImg.src = "";
+            e.dataTransfer.setDragImage(newEmptyImg, 0, 0);
+            dragStartVal.current = e.clientX;
+        },
+        onDragEnd: (e: React.DragEvent<HTMLDivElement>) => {
+            const dragEndVal = e.clientX;
+            if (dragEndVal - dragStartVal.current > 0) {
+                handlePrevious();
+            } else if (dragEndVal - dragStartVal.current < 0) {
+                handleNext();
+            }
+        },
+    };
+
+    const handleWrapperKeydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            handlePrevious();
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            handleNext();
         }
     };
 
     return (
-        <div className={styles.sliderContainer} ref={containerRef} onKeyDown={onSliderKeydown} tabIndex={0}>
-            <div className={styles.slider} style={sliderStyle}>
-                <div className={styles.arrowContainer}>
-                    <Button onClick={handleLeftArrow}>{"<"}</Button> <Button onClick={handleRightArrow}>{">"}</Button>
-                </div>
-                <div className={styles.sliderWrapper} style={{ left: `${wrapperLeftValue}px` }} draggable={false}>
-                    {sliderData.map(({ src, alt }) => (
-                        <div
-                            className={`${styles.image}`}
-                            key={src}
-                            style={{ width: `${sliderWidthToken}px`, marginRight: `${sliderWidthToken / 20}px` }}
-                            draggable={true}
-                            onDragStart={handleDragStart}
-                            onDragEnd={handleDragEnd}
-                        >
-                            <Image className={styles.img} width={1920} height={1080} src={src} alt={alt || "image"} />
-                        </div>
-                    ))}
-                </div>
+        <div className={styles.sliderWrapper} onKeyDown={handleWrapperKeydown}>
+            <div className={styles.btnContainer}>
+                <Button onClick={handlePrevious}>{"<"}</Button>
+                <Button onClick={handleNext}>{">"}</Button>
+            </div>
+
+            <div className={styles.sliderContainer}>
+                {sliderItems.map((item, index) => (
+                    <PresentationItem
+                        key={index.toString()}
+                        item={type === "images" ? (item as TSliderComponent).item : (item as TSliderComponent).item}
+                        type={type}
+                        eventHandlers={eventHandlers}
+                        className={styles.presItem}
+                        style={{
+                            translate: `${-100 * currIndex}%`,
+                            scale: index === currIndex ? 1.1 : 0.8,
+                        }}
+                    />
+                ))}
+            </div>
+            <div className={styles.sliderMenu}>
+                {sliderItems.map((_item, index) => (
+                    <Button key={index.toString()} onClick={() => handleSetIndex(index)}>
+                        {index}
+                    </Button>
+                ))}
             </div>
         </div>
     );
 };
 
 export default Slider;
+
+export const PresentationItem: React.FC<TPresentationItem> = ({ item, type, className, style, eventHandlers }) => {
+    return (
+        <div className={className} draggable={true} style={style} {...eventHandlers}>
+            {type === "components" ? (
+                (item as React.ReactNode)
+            ) : (
+                <div className={styles.imgContainer}>
+                    <Image
+                        src={(item as TImage).src}
+                        width={600}
+                        height={600}
+                        alt={(item as TImage).alt || "slider image"}
+                        className={styles.img}
+                    />
+                </div>
+            )}
+        </div>
+    );
+};

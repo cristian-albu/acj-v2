@@ -16,19 +16,26 @@ import Slider from "@/shared/components/presentation/Slider";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
 import React from "react";
+import { TSliderProps } from "@/shared/components/presentation/types";
 
-const mock_sliderData = [
-    { id: "1", src: "/img1.jpg" },
-    { id: "2", src: "/img2.jpg" },
-    { id: "3", src: "/img3.jpg" },
-];
+const mock_sliderData: TSliderProps = {
+    type: "images",
+    sliderItems: [
+        { item: { src: "/img1.jpg" } },
+        { item: { src: "/img2.jpg" } },
+        { item: { src: "/img3.jpg" } },
+        { item: { src: "/img1.jpg" } },
+        { item: { src: "/img2.jpg" } },
+        { item: { src: "/img3.jpg" } },
+    ],
+};
 
 const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
                 <Row>
-                    <Slider data={mock_sliderData} />
+                    <Slider sliderItems={mock_sliderData.sliderItems} type={mock_sliderData.type} />
                 </Row>
                 <Row>
                     <List listItems={mock_listItems} />

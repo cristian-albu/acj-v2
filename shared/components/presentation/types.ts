@@ -1,22 +1,35 @@
-import { CSSProperties, KeyboardEvent, MouseEvent } from "react";
+import React from "react";
 
-export type TLightboxData = {
-    id?: string;
+export type TImage = {
+    src: string;
     alt?: string;
-    src: string;
 };
 
-export type TLightBoxProps = {
-    data: TLightboxData[];
+export type TSliderImage = {
+    item: TImage;
+    index?: number;
 };
 
-export type TOnAction = KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLDivElement>;
+export type TSliderComponent = {
+    item: React.ReactNode;
+    index?: number;
+};
 
-export type TImageContainer = {
-    src: string;
-    index: number;
+export type TPresentationItem = {
+    type: "images" | "components";
+    eventHandlers: Record<string, (e: any) => void>;
     className: string;
-    style?: CSSProperties;
-    alt?: string;
-    onAction: (index: number, event: TOnAction) => void;
+    style?: React.CSSProperties;
+} & (TSliderImage | TSliderComponent);
+
+export type TSliderImages = {
+    type: "images";
+    sliderItems: TSliderImage[];
 };
+
+export type TSliderComponents = {
+    type: "components";
+    sliderItems: TSliderComponent[];
+};
+
+export type TSliderProps = TSliderImages | TSliderComponents;
