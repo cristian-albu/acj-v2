@@ -12,14 +12,24 @@ import Row from "@/shared/components/layout/Row";
 import Section from "@/shared/components/layout/Section";
 import Title from "@/shared/components/layout/Title";
 import Wrapper from "@/shared/components/layout/Wrapper";
+import Slider from "@/shared/components/presentation/Slider";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
 import React from "react";
+
+const mock_sliderData = [
+    { id: "1", src: "/img1.jpg" },
+    { id: "2", src: "/img2.jpg" },
+    { id: "3", src: "/img3.jpg" },
+];
 
 const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
+                <Row>
+                    <Slider data={mock_sliderData} />
+                </Row>
                 <Row>
                     <List listItems={mock_listItems} />
                 </Row>
@@ -68,6 +78,7 @@ const StylesheetView = () => {
                         <p>Lorem ipsum dolor sit amet</p>
                     </Card>
                 </Row>
+
                 <Row>
                     <ButtonLink href={"/"} linkStyle="linkText">
                         Link text
