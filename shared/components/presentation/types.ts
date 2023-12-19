@@ -17,6 +17,8 @@ export type TSliderComponent = {
 
 export type TPresentationItem = {
     type: "images" | "components";
+    onFocus: () => void;
+    index: number;
     eventHandlers: Record<string, (e: any) => void>;
     className: string;
     style?: React.CSSProperties;

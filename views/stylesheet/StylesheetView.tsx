@@ -21,12 +21,21 @@ import { TSliderProps } from "@/shared/components/presentation/types";
 const mock_sliderData: TSliderProps = {
     type: "images",
     sliderItems: [
-        { item: { src: "/img1.jpg" } },
+        { item: { src: "/img1.jpg", alt: "An image of something" } },
         { item: { src: "/img2.jpg" } },
         { item: { src: "/img3.jpg" } },
         { item: { src: "/img1.jpg" } },
         { item: { src: "/img2.jpg" } },
         { item: { src: "/img3.jpg" } },
+    ],
+};
+
+const mock_sliderData2: TSliderProps = {
+    type: "components",
+    sliderItems: [
+        { item: <Button>Some button</Button> },
+        { item: <Button>Some button</Button> },
+        { item: <Button>Some button</Button> },
     ],
 };
 
@@ -36,6 +45,10 @@ const StylesheetView = () => {
             <Wrapper>
                 <Row>
                     <Slider sliderItems={mock_sliderData.sliderItems} type={mock_sliderData.type} />
+                </Row>
+
+                <Row>
+                    <Slider sliderItems={mock_sliderData2.sliderItems} type={mock_sliderData2.type} />
                 </Row>
                 <Row>
                     <List listItems={mock_listItems} />
