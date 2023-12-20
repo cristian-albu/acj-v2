@@ -41,6 +41,7 @@
     background-color: white;
     border-radius: 0.5rem;
     box-shadow: 0rem 1rem 1rem 0rem rgba(130, 130, 130, 0.2);
-    animation: fadeIn 200ms;
+    animation: fadeIn 200ms ease-in-out;
     overflow: hidden;
+    transition: opacity 200ms, transform 200ms;
 }

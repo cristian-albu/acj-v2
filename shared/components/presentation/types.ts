@@ -5,33 +5,36 @@ export type TImage = {
     alt?: string;
 };
 
-export type TSliderImage = {
+export type TPresentationImage = {
     item: TImage;
+    itemHeader?: React.ReactNode;
     index?: number;
 };
 
-export type TSliderComponent = {
+export type TPresentationComponent = {
     item: React.ReactNode;
+    itemHeader?: React.ReactNode;
     index?: number;
 };
 
 export type TPresentationItem = {
     type: "images" | "components";
-    onFocus: () => void;
+    onFocus?: () => void;
     index: number;
-    eventHandlers: Record<string, (e: any) => void>;
+    eventHandlers?: Record<string, (e: any) => void>;
     className: string;
     style?: React.CSSProperties;
-} & (TSliderImage | TSliderComponent);
+    itemHeader?: React.ReactNode;
+} & (TPresentationImage | TPresentationComponent);
 
-export type TSliderImages = {
+export type TPresentationImages = {
     type: "images";
-    sliderItems: TSliderImage[];
+    presentationItems: TPresentationImage[];
 };
 
-export type TSliderComponents = {
+export type TPresentationComponents = {
     type: "components";
-    sliderItems: TSliderComponent[];
+    presentationItems: TPresentationComponent[];
 };
 
-export type TSliderProps = TSliderImages | TSliderComponents;
+export type TPresentationProps = TPresentationImages | TPresentationComponents;

@@ -1,11 +1,12 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./presentation.module.scss";
-import { TImage, TSliderComponent, TSliderProps } from "./types";
+import { TImage, TPresentationComponent, TPresentationProps } from "./types";
 import Button from "../layout/Button";
 import getEffectiveBackgroundColor from "@/shared/lib/getEffectiveBackgroundColor";
 import PresentationItem from "./PresentationItem";
 import isCurrPrevOrNextIndex from "./utils/isCurrPrevOrNextIndex";
+import PresentationOverlay from "./utils/PresentationOverlay";
 
 /**
  * Slider
@@ -13,12 +14,12 @@ import isCurrPrevOrNextIndex from "./utils/isCurrPrevOrNextIndex";
  * - It has a menu that can be used to navigate to a specific slide
  * - It has a previous and next button
  * - It can be navigated with the keyboard
- * @param {TSliderProps} props
- * @returns {React.FC<TSliderProps>}
+ * @param {TPresentationProps} props
+ * @returns {React.FC<TPresentationProps>}
  * @example
- * <Slider sliderItems={sliderData.sliderItems} type={sliderData.type} />
+ * <Slider presentationItems={sliderData.presentationItems} type={sliderData.type} />
  */
-const Slider: React.FC<TSliderProps> = ({ type, sliderItems }) => {
+const Slider: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
     const dragStartVal = useRef<number>(0);
     const sliderRef = useRef<HTMLDivElement | null>(null);
     const sliderContentRef = useRef<HTMLDivElement | null>(null);
@@ -26,30 +27,20 @@ const Slider: React.FC<TSliderProps> = ({ type, sliderItems }) => {
 
     const [currIndex, setCurrIndex] = useState(1);
 
-    /**
-     * - The slider has a background color that is used to create a gradient overlay
-     * - This background color is not always the same as the background color of the slider
-     */
-    const [realBackgroundColor, setRealBackgroundColor] = useState<string>("rgba(0,0,0,0)");
-    useEffect(() => {
-        const realBgColor = getEffectiveBackgroundColor(sliderRef.current as HTMLDivElement);
-        setRealBackgroundColor(realBgColor);
-    }, []);
-
     const handleSelectSlideFromMenu = (index: number) => {
         setCurrIndex(index);
     };
 
     const handlePrevious = () => {
         if (currIndex === 0) {
-            setCurrIndex(sliderItems.length - 1);
+            setCurrIndex(presentationItems.length - 1);
         } else {
             setCurrIndex(currIndex - 1);
         }
     };
 
     const handleNext = () => {
-        if (currIndex === sliderItems.length - 1) {
+        if (currIndex === presentationItems.length - 1) {
             setCurrIndex(0);
         } else {
             setCurrIndex(currIndex + 1);
@@ -78,6 +69,7 @@ const Slider: React.FC<TSliderProps> = ({ type, sliderItems }) => {
             const newEmptyImg = new window.Image(); // so it does not show the dragged item with half opacity
             newEmptyImg.src = "";
             e.dataTransfer.setDragImage(newEmptyImg, 0, 0);
+
             dragStartVal.current = e.clientX;
         },
         onDragEnd: (e: React.DragEvent<HTMLDivElement>) => {
@@ -134,30 +126,27 @@ const Slider: React.FC<TSliderProps> = ({ type, sliderItems }) => {
             </div>
 
             <div className={styles.sliderContainer} ref={sliderContentRef} role="listbox" tabIndex={0}>
-                {sliderItems.map((item, index) => (
+                {presentationItems.map((item, index) => (
                     <PresentationItem
                         key={index.toString()}
-                        item={type === "images" ? (item as TSliderComponent).item : (item as TSliderComponent).item}
+                        item={
+                            type === "images" ? (item as TPresentationComponent).item : (item as TPresentationComponent).item
+                        }
                         type={type}
                         index={index}
                         eventHandlers={eventHandlers}
-                        className={styles.presItem}
+                        className={`${styles.presItem} ${index === currIndex ? styles.active : ""}`}
                         onFocus={() => setCurrIndex(index)}
                         style={{
                             translate: `${-100 * currIndex}%`,
                             scale: index === currIndex ? 1.1 : 0.8,
-                            opacity: isCurrPrevOrNextIndex(index, currIndex, sliderItems.length) ? 1 : 0,
+                            opacity: isCurrPrevOrNextIndex(index, currIndex, presentationItems.length) ? 1 : 0,
                         }}
                     />
                 ))}
             </div>
 
-            <div
-                className={styles.sliderOverlay}
-                style={{
-                    background: `linear-gradient(90deg, ${realBackgroundColor} 0%, rgba(0,0,0,0) 5%, rgba(0,0,0,0) 95%, ${realBackgroundColor} 100%)`,
-                }}
-            />
+            <PresentationOverlay />
 
             <div
                 className={styles.sliderMenu}
@@ -166,7 +155,7 @@ const Slider: React.FC<TSliderProps> = ({ type, sliderItems }) => {
                 role="listbox"
                 onKeyDown={handleSliderMenuKeydown}
             >
-                {sliderItems.map((item, index) => (
+                {presentationItems.map((item, index) => (
                     <Button
                         key={index.toString()}
                         role="option"

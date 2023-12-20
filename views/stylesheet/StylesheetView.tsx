@@ -1,6 +1,6 @@
 "use client";
 import mock_formData from "@/data/form/mock_data";
-import mock_listItems from "@/data/list/mock_data";
+import { mock_listItems, mock_menuItems } from "@/data/list/mock_data";
 import FileInput from "@/shared/components/inputs/FileInput";
 import Form from "@/shared/components/inputs/Form";
 import Switch from "@/shared/components/inputs/Switch";
@@ -16,26 +16,27 @@ import Slider from "@/shared/components/presentation/Slider";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
 import React from "react";
-import { TSliderProps } from "@/shared/components/presentation/types";
+import { TPresentationProps } from "@/shared/components/presentation/types";
+import Tabs from "@/shared/components/presentation/Tabs";
 
-const mock_sliderData: TSliderProps = {
+const mock_sliderData: TPresentationProps = {
     type: "images",
-    sliderItems: [
-        { item: { src: "/img1.jpg", alt: "An image of something" } },
-        { item: { src: "/img2.jpg" } },
-        { item: { src: "/img3.jpg" } },
-        { item: { src: "/img1.jpg" } },
-        { item: { src: "/img2.jpg" } },
-        { item: { src: "/img3.jpg" } },
+    presentationItems: [
+        { item: { src: "/img1.jpg", alt: "An image of something" }, itemHeader: "Image 1" },
+        { item: { src: "/img2.jpg" }, itemHeader: "Image 2" },
+        { item: { src: "/img3.jpg" }, itemHeader: "Image 3" },
+        { item: { src: "/img1.jpg" }, itemHeader: "Image 4" },
+        { item: { src: "/img2.jpg" }, itemHeader: "Image 5" },
+        { item: { src: "/img3.jpg" }, itemHeader: "Image 6" },
     ],
 };
 
-const mock_sliderData2: TSliderProps = {
+const mock_sliderData2: TPresentationProps = {
     type: "components",
-    sliderItems: [
-        { item: <Button>Some button</Button> },
-        { item: <Button>Some button</Button> },
-        { item: <Button>Some button</Button> },
+    presentationItems: [
+        { item: <Button>Some button</Button>, itemHeader: "Button 1" },
+        { item: <Button>Some button</Button>, itemHeader: "Button 2" },
+        { item: <Button>Some button</Button>, itemHeader: "Button 3" },
     ],
 };
 
@@ -43,16 +44,29 @@ const StylesheetView = () => {
     return (
         <Section>
             <Wrapper>
+                <Title>Slider with images</Title>
                 <Row>
-                    <Slider sliderItems={mock_sliderData.sliderItems} type={mock_sliderData.type} />
+                    <Slider {...mock_sliderData} />
                 </Row>
-
+                <Title>Slider with components</Title>
                 <Row>
-                    <Slider sliderItems={mock_sliderData2.sliderItems} type={mock_sliderData2.type} />
+                    <Slider {...mock_sliderData2} />
                 </Row>
+                <Title>Tabs with images</Title>
+                <Row>
+                    <Tabs {...mock_sliderData} />
+                </Row>
+                <Title>Tabs with components</Title>
+                <Row>
+                    <Tabs {...mock_sliderData2} />
+                </Row>
+                <Title>Lightbox with images</Title>
+                <Title>Lightbox with components</Title>
+                <Title>List</Title>
                 <Row>
                     <List listItems={mock_listItems} />
                 </Row>
+                <Title>Cards</Title>
                 <Row>
                     <Card>
                         <h3>Text</h3>
@@ -99,6 +113,7 @@ const StylesheetView = () => {
                     </Card>
                 </Row>
 
+                <Title>Buttons</Title>
                 <Row>
                     <ButtonLink href={"/"} linkStyle="linkText">
                         Link text
@@ -114,8 +129,27 @@ const StylesheetView = () => {
                     <Button btnType="secondary" btnStyle="outline">
                         Button text
                     </Button>
-
-                    <Menu menuContents={{ listItems: mock_listItems }}>Menu</Menu>
+                </Row>
+                <Title>Menu</Title>
+                <Row>
+                    <Menu menuContents={mock_menuItems.menuContents} menuPosition="right">
+                        Menu right
+                    </Menu>
+                    <Menu menuContents={mock_menuItems.menuContents} menuPosition="right-bottom">
+                        Menu right bottom
+                    </Menu>
+                    <Menu menuContents={mock_menuItems.menuContents} menuPosition="right-bottom-inner">
+                        Menu right bottom inner
+                    </Menu>
+                    <Menu menuContents={mock_menuItems.menuContents} menuPosition="left">
+                        Menu left
+                    </Menu>
+                    <Menu menuContents={mock_menuItems.menuContents} menuPosition="left-bottom">
+                        Menu left bottom
+                    </Menu>
+                    <Menu menuContents={mock_menuItems.menuContents} menuPosition="left-bottom-inner">
+                        Menu left bottom inner
+                    </Menu>
                 </Row>
                 <TextInput errorCallbacks={[{ validation: "minmax", args: [1, 10] }]} defaultValue={"Value"}>
                     This is the description

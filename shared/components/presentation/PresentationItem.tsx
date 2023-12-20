@@ -21,6 +21,9 @@ export const PresentationItem: React.FC<TPresentationItem> = ({
     onFocus,
     eventHandlers,
 }) => {
+    const handleFocus = () => {
+        onFocus && onFocus();
+    };
     return (
         <div
             className={className}
@@ -29,7 +32,7 @@ export const PresentationItem: React.FC<TPresentationItem> = ({
             aria-label={`Slide number: ${index + 1}`}
             role="option"
             tabIndex={0}
-            onFocus={() => onFocus()}
+            onFocus={handleFocus}
             {...eventHandlers}
         >
             {type === "components" ? (
