@@ -15,24 +15,34 @@ import { TImage, TPresentationItem } from "./types";
 export const PresentationItem: React.FC<TPresentationItem> = ({
     item,
     type,
+    idPrefix,
     className,
     style,
     index,
+    draggable = true,
+    tabIndex,
     onFocus,
+    onClick,
     eventHandlers,
 }) => {
     const handleFocus = () => {
         onFocus && onFocus();
     };
+
+    const handleClick = () => {
+        onClick && onClick();
+    };
     return (
         <div
+            id={`${idPrefix}-presentation-item-${index}`}
             className={className}
-            draggable={true}
+            draggable={draggable}
             style={style}
-            aria-label={`Slide number: ${index + 1}`}
-            role="option"
-            tabIndex={0}
+            aria-label={`Item number: ${index + 1} ${(type === "images" && (item as TImage).alt) || ""}`}
+            role={type === "components" || tabIndex === 0 ? "option" : "img"}
+            tabIndex={tabIndex === 0 ? 0 : -1 || type === "images" ? -1 : 0}
             onFocus={handleFocus}
+            onClick={handleClick}
             {...eventHandlers}
         >
             {type === "components" ? (
@@ -43,7 +53,7 @@ export const PresentationItem: React.FC<TPresentationItem> = ({
                         src={(item as TImage).src}
                         width={600}
                         height={600}
-                        alt={(item as TImage).alt || "slider image"}
+                        alt={(item as TImage).alt || "image"}
                         className={styles.img}
                     />
                 </div>

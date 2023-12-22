@@ -1,9 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./presentation.module.scss";
 import { TImage, TPresentationComponent, TPresentationProps } from "./types";
 import Button from "../layout/Button";
-import getEffectiveBackgroundColor from "@/shared/lib/getEffectiveBackgroundColor";
 import PresentationItem from "./PresentationItem";
 import isCurrPrevOrNextIndex from "./utils/isCurrPrevOrNextIndex";
 import PresentationOverlay from "./utils/PresentationOverlay";

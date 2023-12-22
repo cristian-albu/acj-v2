@@ -19,7 +19,11 @@ export type TPresentationComponent = {
 
 export type TPresentationItem = {
     type: "images" | "components";
+    idPrefix?: string;
     onFocus?: () => void;
+    onClick?: () => void;
+    tabIndex?: number;
+    draggable?: boolean;
     index: number;
     eventHandlers?: Record<string, (e: any) => void>;
     className: string;

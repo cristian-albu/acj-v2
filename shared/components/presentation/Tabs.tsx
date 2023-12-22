@@ -8,6 +8,7 @@ import PresentationOverlay from "./utils/PresentationOverlay";
 
 const Tabs: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
     const [currIndex, setCurrIndex] = useState(0);
+
     return (
         <div
             className={`${styles.tabs} ${type === "images" ? styles.tabImages : ""}`}
@@ -20,6 +21,7 @@ const Tabs: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
                     <Button
                         key={index.toString()}
                         role="option"
+                        btnStyle={index === currIndex ? undefined : "outline"}
                         onClick={() => setCurrIndex(index)}
                         aria-label={`slider button that navigates to the tab number ${index + 1}. ${
                             type === "images" ? (item.item as TImage).alt || "" : ""

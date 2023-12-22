@@ -15,9 +15,10 @@ import Wrapper from "@/shared/components/layout/Wrapper";
 import Slider from "@/shared/components/presentation/Slider";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TPresentationProps } from "@/shared/components/presentation/types";
 import Tabs from "@/shared/components/presentation/Tabs";
+import Lightbox from "@/shared/components/presentation/Lightbox";
 
 const mock_sliderData: TPresentationProps = {
     type: "images",
@@ -60,6 +61,12 @@ const StylesheetView = () => {
                 <Row>
                     <Tabs {...mock_sliderData2} />
                 </Row>
+
+                <Title>Lightbox with images</Title>
+                <Row>
+                    <Lightbox {...mock_sliderData} />
+                </Row>
+
                 <Title>Lightbox with images</Title>
                 <Title>Lightbox with components</Title>
                 <Title>List</Title>
