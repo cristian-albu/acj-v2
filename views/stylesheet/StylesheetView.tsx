@@ -12,7 +12,7 @@ import Row from "@/shared/components/layout/Row";
 import Section from "@/shared/components/layout/Section";
 import Title from "@/shared/components/layout/Title";
 import Wrapper from "@/shared/components/layout/Wrapper";
-import Slider from "@/shared/components/presentation/Slider";
+import Carousel from "@/shared/components/presentation/Carousel";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
 import React, { useEffect, useState } from "react";
@@ -47,11 +47,11 @@ const StylesheetView = () => {
             <Wrapper>
                 <Title>Slider with images</Title>
                 <Row>
-                    <Slider {...mock_sliderData} />
+                    <Carousel {...mock_sliderData} />
                 </Row>
                 <Title>Slider with components</Title>
                 <Row>
-                    <Slider {...mock_sliderData2} />
+                    <Carousel {...mock_sliderData2} />
                 </Row>
                 <Title>Tabs with images</Title>
                 <Row>
@@ -62,13 +62,11 @@ const StylesheetView = () => {
                     <Tabs {...mock_sliderData2} />
                 </Row>
 
-                <Title>Lightbox with images</Title>
+                <Title>Lightbox</Title>
                 <Row>
                     <Lightbox {...mock_sliderData} />
                 </Row>
 
-                <Title>Lightbox with images</Title>
-                <Title>Lightbox with components</Title>
                 <Title>List</Title>
                 <Row>
                     <List listItems={mock_listItems} />

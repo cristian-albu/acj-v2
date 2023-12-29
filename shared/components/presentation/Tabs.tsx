@@ -1,13 +1,22 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { TImage, TPresentationComponent, TPresentationProps } from "./types";
-import PresentationItem from "./PresentationItem";
+import React from "react";
+import { TImage, TPresentationProps } from "./types";
 import styles from "./presentation.module.scss";
 import Button from "../layout/Button";
 import PresentationOverlay from "./utils/PresentationOverlay";
+import useSlider from "./useSlider";
 
-const Tabs: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
-    const [currIndex, setCurrIndex] = useState(0);
+/**
+ *  Tabs
+ * - A slider component that can be used to display images or components
+ * @param props
+ * @example
+ * <Tabs presentationItems={sliderData.presentationItems} type={sliderData.type} />
+ */
+const Tabs: React.FC<TPresentationProps> = (props) => {
+    const { type, presentationItems } = props;
+
+    const { currIndex, setCurrIndex, slides } = useSlider(props);
 
     return (
         <div
@@ -31,22 +40,8 @@ const Tabs: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
                     </Button>
                 ))}
             </div>
-            <div className={styles.tabContainer} role="listbox" tabIndex={0} aria-label="Tabs menu">
-                {presentationItems.map((item, index) => (
-                    <PresentationItem
-                        key={index.toString()}
-                        item={
-                            type === "images" ? (item as TPresentationComponent).item : (item as TPresentationComponent).item
-                        }
-                        type={type}
-                        index={index}
-                        className={styles.presItem}
-                        style={{
-                            translate: `${-100 * currIndex}%`,
-                            opacity: currIndex === index ? 1 : 0,
-                        }}
-                    />
-                ))}
+            <div className={styles.tabContainer}>
+                {slides}
                 <PresentationOverlay />
             </div>
         </div>

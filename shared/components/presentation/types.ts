@@ -17,8 +17,10 @@ export type TPresentationComponent = {
     index?: number;
 };
 
+export type TImageType = "images";
+export type TComponentType = "components";
 export type TPresentationItem = {
-    type: "images" | "components";
+    type: TImageType | TComponentType;
     idPrefix?: string;
     onFocus?: () => void;
     onClick?: () => void;
@@ -32,12 +34,12 @@ export type TPresentationItem = {
 } & (TPresentationImage | TPresentationComponent);
 
 export type TPresentationImages = {
-    type: "images";
+    type: TImageType;
     presentationItems: TPresentationImage[];
 };
 
 export type TPresentationComponents = {
-    type: "components";
+    type: TComponentType;
     presentationItems: TPresentationComponent[];
 };
 

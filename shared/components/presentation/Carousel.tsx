@@ -18,7 +18,7 @@ import PresentationOverlay from "./utils/PresentationOverlay";
  * @example
  * <Slider presentationItems={sliderData.presentationItems} type={sliderData.type} />
  */
-const Slider: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
+const Carousel: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
     const dragStartVal = useRef<number>(0);
     const sliderRef = useRef<HTMLDivElement | null>(null);
     const sliderContentRef = useRef<HTMLDivElement | null>(null);
@@ -172,4 +172,4 @@ const Slider: React.FC<TPresentationProps> = ({ type, presentationItems }) => {
     );
 };
 
-export default Slider;
+export default Carousel;
