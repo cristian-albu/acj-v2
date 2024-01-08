@@ -5,12 +5,16 @@
  */
 export const getFormData = (formRef: HTMLFormElement) => {
     const formElements = formRef.elements;
+
     const inputData = Array.from(formElements).reduce((acc: Record<string, string | number | boolean>, curr: Element) => {
         if (curr instanceof HTMLInputElement || curr instanceof HTMLTextAreaElement) {
+            let key = curr.id;
             let value: string | number | boolean = "";
+
             switch (curr.type) {
                 case "text":
                 case "textarea":
+                case "password":
                     value = curr.value || "";
                     break;
                 case "number":
@@ -22,8 +26,17 @@ export const getFormData = (formRef: HTMLFormElement) => {
                 case "file":
                     value = curr.attributes.getNamedItem("server-file-ref")?.value || "";
                     break;
+                case "radio":
+                    if (curr instanceof HTMLInputElement && curr.checked) {
+                        key = curr.name;
+                        value = curr.value;
+                        break;
+                    } else {
+                        return acc;
+                    }
             }
-            acc[curr.id] = value;
+
+            acc[key] = value;
         }
 
         return acc;

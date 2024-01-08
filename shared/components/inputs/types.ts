@@ -1,5 +1,12 @@
 import { TvalidationReturn } from "@/shared/lib/input-validation/inputValidation";
-import React, { ChangeEvent, Dispatch, InputHTMLAttributes, SetStateAction, TextareaHTMLAttributes } from "react";
+import React, {
+    ChangeEvent,
+    Dispatch,
+    HTMLAttributes,
+    InputHTMLAttributes,
+    SetStateAction,
+    TextareaHTMLAttributes,
+} from "react";
 
 export type TSwitch = { id?: string } & TChildren & InputHTMLAttributes<HTMLInputElement>;
 
@@ -103,6 +110,14 @@ export type TFocusedState = {
 
 export type TInputErrorProps = { errorList: TvalidationReturn[]; errorState: TErrorState };
 
+export type TSelectOption = {
+    value: string;
+    text: string;
+};
+
+export type TSelectProps = {
+    options: TSelectOption[];
+} & React.HTMLAttributes<HTMLDivElement>;
 // Form
 
 export type TDynamicFormInputText = {
@@ -117,9 +132,13 @@ export type TDynamicFormInputFile = {
     type: "file";
 } & TFileInput;
 
+export type TDynamicFormInputSelect = {
+    type: "select";
+} & TSelectProps;
+
 export type TDynamicFormInput = {
     id: string;
-} & (TDynamicFormInputText | TDynamicFormInputFile | TDynamicFormInputSwitch);
+} & (TDynamicFormInputText | TDynamicFormInputFile | TDynamicFormInputSwitch | TDynamicFormInputSelect);
 
 /**
  * @example 
@@ -169,4 +188,4 @@ export type TDynamicFormProps = {
         action: (data: any) => void;
         placement?: "left" | "center" | "right";
     };
-};
+} & HTMLAttributes<HTMLFormElement>;

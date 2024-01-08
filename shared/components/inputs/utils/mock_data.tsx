@@ -1,6 +1,6 @@
 import { TDynamicFormProps } from "@/shared/components/inputs/types";
 
-const mock_formData: TDynamicFormProps = {
+export const mock_formData: TDynamicFormProps = {
     inputList: [
         {
             type: "text",
@@ -11,7 +11,7 @@ const mock_formData: TDynamicFormProps = {
         },
         { type: "text", children: "Slug input", id: "id2", errorCallbacks: [{ validation: "slug" }] },
         { type: "text", children: "Text input", id: "id3", errorCallbacks: [{ validation: "minmax", args: [1, 64] }] },
-        { type: "number", children: "Text input", id: "id4", errorCallbacks: [{ validation: "minmax", args: [1, 2] }] },
+        { type: "number", children: "Number input", id: "id4", errorCallbacks: [{ validation: "minmax", args: [1, 2] }] },
         { type: "textarea", children: "Textarea", id: "id5", errorCallbacks: [{ validation: "minmax", args: [1, 128] }] },
         {
             uploadToServerData: { endpoint: "/api/file" },
@@ -24,14 +24,16 @@ const mock_formData: TDynamicFormProps = {
                 { validation: "fileType", args: [["png", "jpg"]] },
             ],
         },
-        {
-            type: "file",
-            children: "File upload 2",
-            uploadToServerData: { endpoint: "/api/file" },
-            id: "id7",
-            errorCallbacks: [{ validation: "file" }],
-        },
         { type: "switch", children: "Switch input", id: "id8" },
+        {
+            type: "select",
+            children: "Select input",
+            id: "id9",
+            options: [
+                { value: "1", text: "Option 1" },
+                { value: "2", text: "Option 2" },
+            ],
+        },
     ],
     formButton: {
         text: "🖥️ Submit",
@@ -40,4 +42,8 @@ const mock_formData: TDynamicFormProps = {
     },
 };
 
-export default mock_formData;
+export const mock_selectOptions = [
+    { text: "Option 1", value: "value1" },
+    { text: "Option 2", value: "value2" },
+    { text: "Option 3", value: "value3" },
+];

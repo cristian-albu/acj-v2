@@ -14,7 +14,7 @@ import useInputFocusAndErrorState from "./utils/useFocusAndErrorState";
  *
  * Get the data once it comes back from the server
  * @example
- * <input type="file" server-file-ref="https://domain.com/image" />
+ * <FileInput type="file" server-file-ref="https://domain.com/image" />
  * const data = event.target.attributes.getNamesItem('server-file-ref').value
  */
 const FileInput: React.FC<TFileInput> = ({ uploadToServerData, id, children, errorCallbacks }) => {
@@ -103,69 +103,72 @@ const FileInput: React.FC<TFileInput> = ({ uploadToServerData, id, children, err
     };
 
     return (
-        <div className={styles.fileUpload} onClick={() => ref.current && ref.current.focus()}>
-            {file && (
-                <>
-                    <div className={styles.fileContainer}>
-                        {generatedImageObjectUrl ? (
-                            loading ? (
+        <div className={styles.file}>
+            {children && <span>{children}</span>}
+            <div className={styles.fileUpload} onClick={() => ref.current && ref.current.focus()}>
+                {file && (
+                    <>
+                        <div className={styles.fileContainer}>
+                            {generatedImageObjectUrl ? (
+                                loading ? (
+                                    <Loading />
+                                ) : (
+                                    <img
+                                        width={900}
+                                        height={900}
+                                        className={styles.fileImg}
+                                        alt="image upload"
+                                        src={success ? serverRef : generatedImageObjectUrl}
+                                    />
+                                )
+                            ) : loading ? (
                                 <Loading />
                             ) : (
-                                <img
-                                    width={900}
-                                    height={900}
-                                    className={styles.fileImg}
-                                    alt="image upload"
-                                    src={success ? serverRef : generatedImageObjectUrl}
-                                />
-                            )
-                        ) : loading ? (
-                            <Loading />
-                        ) : (
-                            <div>
-                                <p>📄 {file.name} </p>
-                                <p>
-                                    {file.size > 1024 * 1024
-                                        ? `${Math.round((file.size / 1024 / 1024) * 100) / 100} MB`
-                                        : `${Math.round((file.size / 1024) * 100) / 100} KB`}
+                                <div>
+                                    <p>📄 {file.name} </p>
+                                    <p>
+                                        {file.size > 1024 * 1024
+                                            ? `${Math.round((file.size / 1024 / 1024) * 100) / 100} MB`
+                                            : `${Math.round((file.size / 1024) * 100) / 100} KB`}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        <span>
+                            {success ? (
+                                <p onClick={copyServerRefToClipboard} style={{ cursor: copied ? "progress" : "copy" }}>
+                                    {copied ? "Resource copied to clipboard" : serverRef.slice(0, 50)}...
                                 </p>
-                            </div>
-                        )}
-                    </div>
-                    <span>
-                        {success ? (
-                            <p onClick={copyServerRefToClipboard} style={{ cursor: copied ? "progress" : "copy" }}>
-                                {copied ? "Resource copied to clipboard" : serverRef.slice(0, 50)}...
-                            </p>
-                        ) : (
-                            <Button onClick={uploadFileToServer} disabled={loading}>
-                                {loading ? "⌛ Uploading..." : "💾 Save"}
+                            ) : (
+                                <Button onClick={uploadFileToServer} disabled={loading}>
+                                    {loading ? "⌛ Uploading..." : "💾 Save"}
+                                </Button>
+                            )}
+
+                            <Button btnStyle="outline" onClick={clearFile} disabled={loading}>
+                                ❌ Clear
                             </Button>
-                        )}
-
-                        <Button btnStyle="outline" onClick={clearFile} disabled={loading}>
-                            ❌ Clear
-                        </Button>
-                    </span>
-                </>
-            )}
-            <label className={file ? styles.fileLoaded : styles.fileLabel}>
-                <input
-                    id={id}
-                    className={styles.fileInput}
-                    type="file"
-                    name="fileUpload"
-                    server-file-ref={serverRef}
-                    onChange={uploadFileToClient}
-                    ref={ref}
-                    disabled={loading}
-                />
-
-                <span>📂 {children || "Upload file"}</span>
-                {errorCallbacks && (
-                    <InputError errorList={errorList} errorState={errorState} {...inputErrorEventsHandlers} />
+                        </span>
+                    </>
                 )}
-            </label>
+                <label className={file ? styles.fileLoaded : styles.fileLabel}>
+                    <input
+                        id={id}
+                        className={styles.fileInput}
+                        type="file"
+                        name={id}
+                        server-file-ref={serverRef}
+                        onChange={uploadFileToClient}
+                        ref={ref}
+                        disabled={loading}
+                    />
+
+                    <span>📂 {"Upload file"}</span>
+                    {errorCallbacks && (
+                        <InputError errorList={errorList} errorState={errorState} {...inputErrorEventsHandlers} />
+                    )}
+                </label>
+            </div>
         </div>
     );
 };

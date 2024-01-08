@@ -9,6 +9,14 @@
     }
 }
 
+.form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: column;
+}
+
 // TextInput
 .textInputLabel {
     display: flex;
@@ -164,117 +172,126 @@
     }
 }
 
-.fileUpload {
+.file {
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 0rem;
-    flex-wrap: wrap;
-    position: relative;
-    background-color: white;
-    border: 1px dashed v.$gray;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-    padding: 1rem;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
 
-    & .fileContainer {
-        max-width: 40%;
+    & .fileUpload {
         width: 100%;
-        aspect-ratio: 2/1;
-        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 2rem 0rem;
+        flex-wrap: wrap;
         position: relative;
-        z-index: 50;
+        background-color: white;
+        border: 1px dashed v.$gray;
         border-radius: 0.5rem;
-        box-shadow: 0px 0.6rem 1rem -5px rgba($color: black, $alpha: 0.2);
-        border: 1px solid v.$gray;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        padding: 1rem;
 
-        & .fileImg {
+        & .fileContainer {
+            max-width: 40%;
             width: 100%;
-            height: auto;
-        }
-
-        & div {
-            width: 100%;
-            text-align: center;
+            aspect-ratio: 2/1;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             position: relative;
+            z-index: 50;
+            border-radius: 0.5rem;
+            box-shadow: 0px 0.6rem 1rem -5px rgba($color: black, $alpha: 0.2);
+            border: 1px solid v.$gray;
 
-            & p {
-                animation: fadeIn;
-                animation-duration: 300ms;
+            & .fileImg {
+                width: 100%;
+                height: auto;
+            }
+
+            & div {
+                width: 100%;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                position: relative;
+
+                & p {
+                    animation: fadeIn;
+                    animation-duration: 300ms;
+                }
             }
         }
-    }
 
-    & > span {
-        position: relative;
-        z-index: 50;
-        width: 60%;
-        display: flex;
-        flex-direction: column;
-        gap: v.$gap;
-        justify-content: stretch;
-        align-items: stretch;
-        padding-left: 2rem;
-    }
-
-    & .fileLabel {
-        position: relative;
-        z-index: 50;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        background-color: v.$lightGray;
-        margin: 3.85rem 0rem;
-        border: 1px solid v.$gray;
-        color: black;
-        padding: 0.4rem 0.8rem;
-        cursor: pointer;
-        border-radius: 0.5rem;
-        transition: border 200ms, box-shadow 200ms;
-
-        &:hover {
-            border-color: v.$mainColor;
-            box-shadow: 0px 5px 10px -5px rgba($color: v.$mainColor, $alpha: 0.2);
+        & > span {
+            position: relative;
+            z-index: 50;
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            gap: v.$gap;
+            justify-content: stretch;
+            align-items: stretch;
+            padding-left: 2rem;
         }
-    }
 
-    & .fileLoaded {
-        width: 0%;
-        height: 0%;
-        opacity: 0;
-        overflow: hidden;
-    }
-
-    &:focus-within {
-        border-color: v.$secondaryColor;
         & .fileLabel {
-            border-color: v.$secondaryColor;
-            box-shadow: 0px 5px 10px -5px rgba($color: v.$secondaryColor, $alpha: 0.2);
+            position: relative;
+            z-index: 50;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: v.$lightGray;
+            margin: 3.85rem 0rem;
+            border: 1px solid v.$gray;
+            color: black;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: border 200ms, box-shadow 200ms;
+
+            &:hover {
+                border-color: v.$mainColor;
+                box-shadow: 0px 5px 10px -5px rgba($color: v.$mainColor, $alpha: 0.2);
+            }
         }
-    }
 
-    & .fileInput {
-        width: 0;
-        height: 0;
+        & .fileLoaded {
+            width: 0%;
+            height: 0%;
+            opacity: 0;
+            overflow: hidden;
+        }
 
-        &:focus {
-            & ~ span {
-                color: v.$mainColor;
+        &:focus-within {
+            border-color: v.$secondaryColor;
+            & .fileLabel {
+                border-color: v.$secondaryColor;
+                box-shadow: 0px 5px 10px -5px rgba($color: v.$secondaryColor, $alpha: 0.2);
+            }
+        }
+
+        & .fileInput {
+            width: 0;
+            height: 0;
+
+            &:focus {
+                & ~ span {
+                    color: v.$mainColor;
+                }
             }
         }
     }
 }
 
 .formBtnContainer {
+    width: 100%;
     display: flex;
     align-items: center;
     &.left {
@@ -287,5 +304,87 @@
 
     &.right {
         justify-content: flex-end;
+    }
+}
+
+.select {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: auto;
+    margin-bottom: v.$gap;
+
+    & > button {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        min-width: 10rem;
+        padding: 0.5rem 2.5rem 0.5rem 0.5rem;
+        border: 1px solid v.$gray;
+        outline: none;
+        background-color: white;
+        border-radius: 0.5rem;
+        position: relative;
+        font-family: inherit;
+
+        & > div {
+            position: absolute;
+            right: 0.8rem;
+            top: calc(50% - 2px);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+
+            border-top: 5px solid v.$gray;
+        }
+    }
+}
+
+.selectOptions {
+    min-width: 10rem;
+    transition: opacity 200ms, transform 200ms;
+    list-style: none;
+    background-color: white;
+    box-shadow: 0px 0.6rem 1rem -5px rgba($color: black, $alpha: 0.2);
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid v.$gray;
+
+    & .option {
+        display: flex;
+        width: 100%;
+
+        & > label {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 200ms, color 200ms;
+
+            &:hover {
+                background-color: v.$mainColor;
+                color: white;
+
+                & > input[type="radio"] {
+                    &:checked {
+                        ~ span {
+                            color: white;
+                        }
+                    }
+                }
+            }
+
+            & > input[type="radio"] {
+                width: 0px;
+                height: 0px;
+
+                &:checked {
+                    ~ span {
+                        color: v.$mainColor;
+                    }
+                }
+            }
+        }
     }
 }

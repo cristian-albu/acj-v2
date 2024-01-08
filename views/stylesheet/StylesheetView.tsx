@@ -1,5 +1,4 @@
 "use client";
-import mock_formData from "@/data/form/mock_data";
 import { mock_listItems, mock_menuItems } from "@/data/list/mock_data";
 import FileInput from "@/shared/components/inputs/FileInput";
 import Form from "@/shared/components/inputs/Form";
@@ -15,20 +14,19 @@ import Wrapper from "@/shared/components/layout/Wrapper";
 import Carousel from "@/shared/components/presentation/Carousel";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { TPresentationProps } from "@/shared/components/presentation/types";
 import Tabs from "@/shared/components/presentation/Tabs";
 import Lightbox from "@/shared/components/presentation/Lightbox";
+import Select from "@/shared/components/inputs/Select";
+import { mock_formData, mock_selectOptions } from "@/shared/components/inputs/utils/mock_data";
 
 const mock_sliderData: TPresentationProps = {
     type: "images",
     presentationItems: [
-        { item: { src: "/img1.jpg", alt: "An image of something" }, itemHeader: "Image 1" },
-        { item: { src: "/img2.jpg" }, itemHeader: "Image 2" },
-        { item: { src: "/img3.jpg" }, itemHeader: "Image 3" },
-        { item: { src: "/img1.jpg" }, itemHeader: "Image 4" },
-        { item: { src: "/img2.jpg" }, itemHeader: "Image 5" },
-        { item: { src: "/img3.jpg" }, itemHeader: "Image 6" },
+        { item: { src: "/img1.svg", alt: "An image of something" }, itemHeader: "Image 1" },
+        { item: { src: "/img2.svg" }, itemHeader: "Image 2" },
+        { item: { src: "/img3.svg" }, itemHeader: "Image 3" },
     ],
 };
 
@@ -161,8 +159,11 @@ const StylesheetView = () => {
                 </TextInput>
                 <TextInput type="textarea">This is the textarea</TextInput>
                 <Switch>This is a switch</Switch>
-                <FileInput uploadToServerData={{ endpoint: "/api/file" }} errorCallbacks={[{ validation: "file" }]} />
-                <FileInput uploadToServerData={{ endpoint: "/api/file" }} errorCallbacks={[{ validation: "file" }]} />
+                <Select options={mock_selectOptions} />
+
+                <FileInput uploadToServerData={{ endpoint: "/api/file" }} errorCallbacks={[{ validation: "file" }]}>
+                    File
+                </FileInput>
 
                 <Card>
                     <Title>Dynamic form</Title>

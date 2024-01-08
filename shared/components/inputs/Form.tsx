@@ -6,11 +6,12 @@ import Switch from "./Switch";
 import FileInput from "./FileInput";
 import getFormData from "./utils/getFormData";
 import styles from "./inputs.module.scss";
+import Select from "./Select";
 
 /**
  * Generate a form from the inputList props. The formButton action will get all the form data in a {id: value} format.
  */
-const Form: React.FC<TDynamicFormProps> = ({ inputList, formButton }) => {
+const Form: React.FC<TDynamicFormProps> = ({ inputList, formButton, ...props }) => {
     const formRef = useRef<null | HTMLFormElement>(null);
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -24,7 +25,7 @@ const Form: React.FC<TDynamicFormProps> = ({ inputList, formButton }) => {
     };
 
     return (
-        <form ref={formRef}>
+        <form ref={formRef} className={styles.form} {...props}>
             {inputList.map((input) => {
                 if (input.type === "text" || input.type === "number" || input.type === "password") {
                     const { type, id, errorCallbacks, children, ...rest } = input;
@@ -53,6 +54,13 @@ const Form: React.FC<TDynamicFormProps> = ({ inputList, formButton }) => {
                         <FileInput uploadToServerData={uploadToServerData} id={id} key={id} errorCallbacks={errorCallbacks}>
                             {children}
                         </FileInput>
+                    );
+                } else if (input.type === "select") {
+                    const { type, id, children, ...rest } = input;
+                    return (
+                        <Select id={id} key={id} {...rest}>
+                            {children}
+                        </Select>
                     );
                 }
             })}

@@ -1,13 +1,5 @@
 "use client";
-import React, {
-    ChangeEvent,
-    InputHTMLAttributes,
-    MutableRefObject,
-    TextareaHTMLAttributes,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import React, { ChangeEvent, InputHTMLAttributes, TextareaHTMLAttributes, useEffect, useState } from "react";
 import { TInputError, TTextInput, TTextareaInput } from "./types";
 import styles from "./inputs.module.scss";
 import {
@@ -95,7 +87,7 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
                 <textarea
                     id={id}
                     className={`${styles.textInput} ${styles.textarea}`}
-                    {...onChange}
+                    onChange={onChange}
                     {...eventHandlers}
                     {...(elementProps as TextareaHTMLAttributes<HTMLTextAreaElement>)} // reson to hate typescript no. 1
                 />
@@ -104,7 +96,7 @@ const TextInput: React.FC<TTextInput | TTextareaInput> = ({
                     id={id}
                     className={styles.textInput}
                     type={type || "text"}
-                    {...onChange}
+                    onChange={onChange}
                     {...eventHandlers}
                     {...(elementProps as InputHTMLAttributes<HTMLInputElement>)} // reson to hate typescript no. 2
                 />
