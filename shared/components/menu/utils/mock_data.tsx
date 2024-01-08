@@ -1,4 +1,4 @@
-import { TListItemProps, TMenuProps } from "@/shared/components/menu/types";
+import { TListItemProps, TMenuProps } from "../types";
 
 export const mock_listItems: TListItemProps[] = [
     { id: "firstItem", children: "First list item" },

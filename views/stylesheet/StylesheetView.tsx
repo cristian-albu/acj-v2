@@ -1,5 +1,7 @@
 "use client";
-import { mock_listItems, mock_menuItems } from "@/data/list/mock_data";
+import { mock_formData, mock_selectOptions } from "@/shared/components/inputs/utils/mock_data";
+import { mock_listItems, mock_menuItems } from "@/shared/components/menu/utils/mock_data";
+import { mock_sliderData, mock_sliderData2 } from "@/shared/components/presentation/utils/mock_data";
 import FileInput from "@/shared/components/inputs/FileInput";
 import Form from "@/shared/components/inputs/Form";
 import Switch from "@/shared/components/inputs/Switch";
@@ -15,29 +17,9 @@ import Carousel from "@/shared/components/presentation/Carousel";
 import List from "@/shared/components/menu/List";
 import Menu from "@/shared/components/menu/Menu";
 import React from "react";
-import { TPresentationProps } from "@/shared/components/presentation/types";
 import Tabs from "@/shared/components/presentation/Tabs";
 import Lightbox from "@/shared/components/presentation/Lightbox";
 import Select from "@/shared/components/inputs/Select";
-import { mock_formData, mock_selectOptions } from "@/shared/components/inputs/utils/mock_data";
-
-const mock_sliderData: TPresentationProps = {
-    type: "images",
-    presentationItems: [
-        { item: { src: "/img1.svg", alt: "An image of something" }, itemHeader: "Image 1" },
-        { item: { src: "/img2.svg" }, itemHeader: "Image 2" },
-        { item: { src: "/img3.svg" }, itemHeader: "Image 3" },
-    ],
-};
-
-const mock_sliderData2: TPresentationProps = {
-    type: "components",
-    presentationItems: [
-        { item: <Button>Some button</Button>, itemHeader: "Button 1" },
-        { item: <Button>Some button</Button>, itemHeader: "Button 2" },
-        { item: <Button>Some button</Button>, itemHeader: "Button 3" },
-    ],
-};
 
 const StylesheetView = () => {
     return (
